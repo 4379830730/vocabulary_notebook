@@ -507,6 +507,9 @@ textarea{resize:vertical;min-height:54px;}
         <option value="new">最新优先</option>
         <option value="old">最早优先</option>
       </select>
+      <button class="btn btn-ghost btn-sm" onclick="exportData()">导出备份</button>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('import-file').click()">导入备份</button>
+      <input type="file" id="import-file" accept="application/json" style="display:none;" onchange="importData(event)">
     </div>
 
     <div id="entries"></div>
@@ -546,11 +549,11 @@ const LEVEL_INTERVALS = [1,1,2,4,7,15,30]; // days until next review, index = le
 
 /* ============ STORAGE ============ */
 
-async function loadEntries(){
+function loadEntries(){
   try{
-    const result = await window.storage.get(STORAGE_KEY, false);
-    if(result && result.value){
-      entries = JSON.parse(result.value);
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      entries = JSON.parse(raw);
     }
   }catch(e){
     entries = [];
@@ -565,9 +568,9 @@ async function loadEntries(){
   renderReview();
 }
 
-async function saveEntries(){
+function saveEntries(){
   try{
-    await window.storage.set(STORAGE_KEY, JSON.stringify(entries), false);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
   }catch(e){
     console.error('Save failed', e);
   }
@@ -1073,6 +1076,55 @@ function restartQuiz(){
   quizScore = 0;
   quizAnswered = false;
   renderQuizSetup();
+}
+
+function exportData(){
+  const blob = new Blob([JSON.stringify(entries, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const date = new Date();
+  const stamp = date.getFullYear() + '-' + String(date.getMonth()+1).padStart(2,'0') + '-' + String(date.getDate()).padStart(2,'0');
+  a.href = url;
+  a.download = `vocab-notebook-backup-${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importData(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      const imported = JSON.parse(e.target.result);
+      if(!Array.isArray(imported)) throw new Error('Invalid format');
+      const merge = confirm(`导入 ${imported.length} 条记录。\n点"确定"合并到现有记录，点"取消"替换全部现有记录。`);
+      if(merge){
+        const existingIds = new Set(entries.map(en => en.id));
+        imported.forEach(im => {
+          if(!existingIds.has(im.id)){
+            entries.unshift(im);
+          }
+        });
+      }else{
+        entries = imported;
+      }
+      entries.forEach(e => {
+        if(typeof e.reviewLevel !== 'number') e.reviewLevel = 0;
+        if(typeof e.nextReview !== 'number') e.nextReview = Date.now();
+        if(typeof e.lastReviewed !== 'number') e.lastReviewed = 0;
+      });
+      saveEntries();
+      render();
+      renderReview();
+    }catch(err){
+      alert('导入失败：文件格式不正确');
+    }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
 }
 
 /* ============ INIT ============ */
