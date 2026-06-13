@@ -14,7 +14,10 @@
   --accent:#E8542E;
   --grid:#DCE2EC;
   --success:#4F8A5B;
+<<<<<<< HEAD
   --warn:#C9A227;
+=======
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
   --muted:#9C9686;
   --card:#FFFFFF;
 }
@@ -55,6 +58,7 @@ body{
   border-radius:3px;
   font-weight:600;
 }
+<<<<<<< HEAD
 .filebar .count{font-family:'IBM Plex Mono',monospace;}
 .filebar .due-badge{
   background:var(--warn);
@@ -62,6 +66,10 @@ body{
   padding:2px 8px;
   border-radius:3px;
   font-weight:600;
+=======
+.filebar .count{
+  font-family:'IBM Plex Mono',monospace;
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
 }
 
 .wrap{
@@ -70,7 +78,11 @@ body{
   padding:32px 20px 0;
 }
 
+<<<<<<< HEAD
 .hero{margin-bottom:22px;}
+=======
+.hero{margin-bottom:26px;}
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
 .hero .eyebrow{
   font-family:'IBM Plex Mono',monospace;
   font-size:12px;
@@ -91,6 +103,7 @@ body{
   margin:0;
 }
 
+<<<<<<< HEAD
 /* ---- Tabs ---- */
 .tabs{
   display:flex;
@@ -130,11 +143,19 @@ body{
 
 /* ---- Add form / frames ---- */
 .add-frame, .session-frame{
+=======
+/* ---- Add form ---- */
+.add-frame{
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
   position:relative;
   background:var(--card);
   border:1px solid var(--ink);
   padding:20px;
+<<<<<<< HEAD
   margin-bottom:20px;
+=======
+  margin-bottom:28px;
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
 }
 .corner{position:absolute;width:13px;height:13px;border:2px solid var(--accent);}
 .corner.tl{top:-2px;left:-2px;border-right:none;border-bottom:none;}
@@ -210,6 +231,7 @@ textarea{resize:vertical;min-height:54px;}
   border-color:var(--accent);
 }
 .btn-danger:hover{background:var(--accent);color:#fff;}
+<<<<<<< HEAD
 .btn-success{
   background:var(--success);
   border-color:var(--success);
@@ -223,6 +245,9 @@ textarea{resize:vertical;min-height:54px;}
 .btn-warn:hover{background:var(--warn);color:#fff;}
 .btn-sm{padding:5px 10px;font-size:11px;}
 .btn-row{display:flex;gap:8px;flex-wrap:wrap;}
+=======
+.btn-sm{padding:5px 10px;font-size:11px;}
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
 
 /* ---- Toolbar ---- */
 .toolbar{
@@ -295,6 +320,7 @@ textarea{resize:vertical;min-height:54px;}
   padding:2px 6px;
   color:var(--ink-soft);
 }
+<<<<<<< HEAD
 .level-badge{
   font-family:'IBM Plex Mono',monospace;
   font-size:10px;
@@ -304,6 +330,8 @@ textarea{resize:vertical;min-height:54px;}
   color:var(--ink-soft);
   border:1px solid var(--grid);
 }
+=======
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
 .entry-translation{
   color:var(--ink-soft);
   font-size:13.5px;
@@ -330,6 +358,7 @@ textarea{resize:vertical;min-height:54px;}
   flex-shrink:0;
 }
 
+<<<<<<< HEAD
 /* ---- Review session ---- */
 .session-setup{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:6px;}
 .session-setup select{width:auto;min-width:160px;}
@@ -421,6 +450,11 @@ textarea{resize:vertical;min-height:54px;}
   margin:20px 0 10px;
 }
 .center{text-align:center;}
+=======
+/* edit mode */
+.entry.editing .form-grid{margin-bottom:8px;}
+.entry.editing .form-row-full{margin-bottom:8px;}
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
 
 @media (max-width:640px){
   .form-grid{grid-template-columns:1fr;}
@@ -432,10 +466,14 @@ textarea{resize:vertical;min-height:54px;}
 
 <div class="filebar">
   <div>Vocabulary_Notebook <span class="tag">UX / Job Search English</span></div>
+<<<<<<< HEAD
   <div style="display:flex;gap:8px;align-items:center;">
     <span class="due-badge" id="due-badge" style="display:none;"></span>
     <span class="count" id="entry-count">0 entries</span>
   </div>
+=======
+  <div class="count" id="entry-count">0 entries</div>
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
 </div>
 
 <div class="wrap">
@@ -443,6 +481,7 @@ textarea{resize:vertical;min-height:54px;}
   <div class="hero">
     <div class="eyebrow">My Notes</div>
     <h1>词汇 · 短语 · 句子笔记本</h1>
+<<<<<<< HEAD
     <p>记录单词、短语或句子，加上中文意思和笔记，并用「每日复习」和「测验」检验记忆效果。所有内容保存在这个浏览器里，下次打开自动加载。</p>
   </div>
 
@@ -533,6 +572,66 @@ textarea{resize:vertical;min-height:54px;}
       <div id="quiz-content"></div>
     </div>
   </div>
+=======
+    <p>把你学到的单词、短语或例句记录下来，加上中文意思和自己的笔记。所有内容会保存在这个浏览器里，下次打开自动加载。</p>
+  </div>
+
+  <div class="add-frame">
+    <span class="corner tl"></span><span class="corner tr"></span>
+    <span class="corner bl"></span><span class="corner br"></span>
+    <div class="frame-label">+ 新增记录</div>
+
+    <div class="form-grid">
+      <div>
+        <label class="field-label">单词 / 短语 / 句子 (English)</label>
+        <input type="text" id="input-term" placeholder="e.g. affordance / be passionate about / I have hands-on experience...">
+      </div>
+      <div>
+        <label class="field-label">类型</label>
+        <select id="input-type">
+          <option value="word">单词 Word</option>
+          <option value="phrase">短语 Phrase</option>
+          <option value="sentence">句子 Sentence</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">标签 Tag</label>
+        <input type="text" id="input-tag" placeholder="e.g. UX / Grammar / Interview">
+      </div>
+    </div>
+
+    <div class="form-row-full">
+      <label class="field-label">中文意思 / 翻译</label>
+      <input type="text" id="input-translation" placeholder="对应的中文意思">
+    </div>
+
+    <div class="form-row-full">
+      <label class="field-label">笔记 / 例句 / 用法说明</label>
+      <textarea id="input-note" placeholder="例句、搭配、容易混淆的点、来源等..."></textarea>
+    </div>
+
+    <button class="btn" onclick="addEntry()">添加</button>
+  </div>
+
+  <div class="toolbar">
+    <input type="text" id="search-box" placeholder="搜索单词/短语/句子/笔记..." oninput="render()">
+    <select id="filter-type" onchange="render()">
+      <option value="">全部类型</option>
+      <option value="word">单词</option>
+      <option value="phrase">短语</option>
+      <option value="sentence">句子</option>
+    </select>
+    <select id="filter-tag" onchange="render()">
+      <option value="">全部标签</option>
+    </select>
+    <select id="sort-order" onchange="render()">
+      <option value="new">最新优先</option>
+      <option value="old">最早优先</option>
+    </select>
+  </div>
+
+  <div id="entries"></div>
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
 
 </div>
 
@@ -541,10 +640,13 @@ let entries = [];
 let editingId = null;
 
 const STORAGE_KEY = 'vocab-notebook-entries';
+<<<<<<< HEAD
 const DAY = 24*60*60*1000;
 const LEVEL_INTERVALS = [1,1,2,4,7,15,30]; // days until next review, index = level
 
 /* ============ STORAGE ============ */
+=======
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
 
 async function loadEntries(){
   try{
@@ -555,6 +657,7 @@ async function loadEntries(){
   }catch(e){
     entries = [];
   }
+<<<<<<< HEAD
   // ensure review fields exist on older entries
   entries.forEach(e => {
     if(typeof e.reviewLevel !== 'number') e.reviewLevel = 0;
@@ -563,6 +666,9 @@ async function loadEntries(){
   });
   render();
   renderReview();
+=======
+  render();
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
 }
 
 async function saveEntries(){
@@ -571,6 +677,7 @@ async function saveEntries(){
   }catch(e){
     console.error('Save failed', e);
   }
+<<<<<<< HEAD
   updateDueBadge();
 }
 
@@ -601,6 +708,10 @@ function updateDueBadge(){
 
 /* ============ ADD / EDIT / DELETE ============ */
 
+=======
+}
+
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
 function addEntry(){
   const term = document.getElementById('input-term').value.trim();
   const type = document.getElementById('input-type').value;
@@ -616,10 +727,14 @@ function addEntry(){
   entries.unshift({
     id: 'e' + Date.now(),
     term, type, tag, translation, note,
+<<<<<<< HEAD
     createdAt: Date.now(),
     reviewLevel: 0,
     nextReview: Date.now(),
     lastReviewed: 0
+=======
+    createdAt: Date.now()
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
   });
 
   document.getElementById('input-term').value = '';
@@ -660,8 +775,11 @@ function saveEdit(id){
   render();
 }
 
+<<<<<<< HEAD
 /* ============ HELPERS ============ */
 
+=======
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
 function typeLabel(type){
   if(type === 'word') return '单词';
   if(type === 'phrase') return '短语';
@@ -670,7 +788,10 @@ function typeLabel(type){
 }
 
 function formatDate(ts){
+<<<<<<< HEAD
   if(!ts) return '—';
+=======
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
   const d = new Date(ts);
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
@@ -681,6 +802,7 @@ function escapeHtml(str){
   return div.innerHTML;
 }
 
+<<<<<<< HEAD
 function shuffle(arr){
   const a = arr.slice();
   for(let i = a.length - 1; i > 0; i--){
@@ -692,6 +814,8 @@ function shuffle(arr){
 
 /* ============ NOTES RENDER ============ */
 
+=======
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
 function updateTagFilter(){
   const tagSelect = document.getElementById('filter-tag');
   const current = tagSelect.value;
@@ -703,7 +827,10 @@ function updateTagFilter(){
 
 function render(){
   updateTagFilter();
+<<<<<<< HEAD
   updateDueBadge();
+=======
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
 
   const search = document.getElementById('search-box').value.trim().toLowerCase();
   const typeFilter = document.getElementById('filter-type').value;
@@ -772,7 +899,10 @@ function render(){
         </div>
       `;
     }
+<<<<<<< HEAD
     const dueToday = (e.translation || e.note) && e.nextReview <= Date.now();
+=======
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
     return `
       <div class="entry type-${e.type}">
         <div class="entry-head">
@@ -780,7 +910,10 @@ function render(){
             <span class="entry-term">${escapeHtml(e.term)}</span>
             <span class="type-badge">${typeLabel(e.type)}</span>
             ${e.tag ? `<span class="tag-badge">${escapeHtml(e.tag)}</span>` : ''}
+<<<<<<< HEAD
             <span class="level-badge" title="复习等级 / 下次复习日期">Lv.${e.reviewLevel} · 下次 ${formatDate(e.nextReview)}${dueToday ? ' · 待复习' : ''}</span>
+=======
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
           </div>
           <div class="entry-actions">
             <button class="btn btn-ghost btn-sm" onclick="startEdit('${e.id}')">编辑</button>
@@ -789,12 +922,17 @@ function render(){
         </div>
         ${e.translation ? `<div class="entry-translation">${escapeHtml(e.translation)}</div>` : ''}
         ${e.note ? `<div class="entry-note">${escapeHtml(e.note)}</div>` : ''}
+<<<<<<< HEAD
         <div class="entry-date">添加于 ${formatDate(e.createdAt)}${e.lastReviewed ? ` · 上次复习 ${formatDate(e.lastReviewed)}` : ''}</div>
+=======
+        <div class="entry-date">${formatDate(e.createdAt)}</div>
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
       </div>
     `;
   }).join('');
 }
 
+<<<<<<< HEAD
 /* ============ REVIEW (Flashcards) ============ */
 
 let reviewQueue = [];
@@ -1077,6 +1215,9 @@ function restartQuiz(){
 
 /* ============ INIT ============ */
 
+=======
+// allow Enter key in term field to submit
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
 document.getElementById('input-term').addEventListener('keydown', function(e){
   if(e.key === 'Enter'){
     addEntry();
@@ -1087,4 +1228,8 @@ loadEntries();
 </script>
 
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> abbcc4c1d30ea5cdba7863ced9292dbd731986a9
