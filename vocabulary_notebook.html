@@ -14,6 +14,7 @@
   --accent:#E8542E;
   --grid:#DCE2EC;
   --success:#4F8A5B;
+  --warn:#C9A227;
   --muted:#9C9686;
   --card:#FFFFFF;
 }
@@ -54,8 +55,13 @@ body{
   border-radius:3px;
   font-weight:600;
 }
-.filebar .count{
-  font-family:'IBM Plex Mono',monospace;
+.filebar .count{font-family:'IBM Plex Mono',monospace;}
+.filebar .due-badge{
+  background:var(--warn);
+  color:var(--ink);
+  padding:2px 8px;
+  border-radius:3px;
+  font-weight:600;
 }
 
 .wrap{
@@ -64,7 +70,7 @@ body{
   padding:32px 20px 0;
 }
 
-.hero{margin-bottom:26px;}
+.hero{margin-bottom:22px;}
 .hero .eyebrow{
   font-family:'IBM Plex Mono',monospace;
   font-size:12px;
@@ -85,13 +91,50 @@ body{
   margin:0;
 }
 
-/* ---- Add form ---- */
-.add-frame{
+/* ---- Tabs ---- */
+.tabs{
+  display:flex;
+  gap:4px;
+  margin-bottom:22px;
+  border-bottom:1px solid var(--grid);
+}
+.tab-btn{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  background:none;
+  border:none;
+  padding:10px 4px;
+  margin-right:18px;
+  cursor:pointer;
+  color:var(--ink-soft);
+  border-bottom:2px solid transparent;
+  position:relative;
+  top:1px;
+}
+.tab-btn.active{
+  color:var(--ink);
+  border-bottom-color:var(--accent);
+}
+.tab-btn .badge{
+  background:var(--warn);
+  color:var(--ink);
+  border-radius:3px;
+  padding:0 5px;
+  font-size:10px;
+  margin-left:6px;
+}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* ---- Add form / frames ---- */
+.add-frame, .session-frame{
   position:relative;
   background:var(--card);
   border:1px solid var(--ink);
   padding:20px;
-  margin-bottom:28px;
+  margin-bottom:20px;
 }
 .corner{position:absolute;width:13px;height:13px;border:2px solid var(--accent);}
 .corner.tl{top:-2px;left:-2px;border-right:none;border-bottom:none;}
@@ -167,7 +210,19 @@ textarea{resize:vertical;min-height:54px;}
   border-color:var(--accent);
 }
 .btn-danger:hover{background:var(--accent);color:#fff;}
+.btn-success{
+  background:var(--success);
+  border-color:var(--success);
+  color:#fff;
+}
+.btn-warn{
+  background:#fff;
+  border-color:var(--warn);
+  color:var(--warn);
+}
+.btn-warn:hover{background:var(--warn);color:#fff;}
 .btn-sm{padding:5px 10px;font-size:11px;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;}
 
 /* ---- Toolbar ---- */
 .toolbar{
@@ -240,6 +295,15 @@ textarea{resize:vertical;min-height:54px;}
   padding:2px 6px;
   color:var(--ink-soft);
 }
+.level-badge{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.05em;
+  border-radius:3px;
+  padding:2px 6px;
+  color:var(--ink-soft);
+  border:1px solid var(--grid);
+}
 .entry-translation{
   color:var(--ink-soft);
   font-size:13.5px;
@@ -266,9 +330,97 @@ textarea{resize:vertical;min-height:54px;}
   flex-shrink:0;
 }
 
-/* edit mode */
-.entry.editing .form-grid{margin-bottom:8px;}
-.entry.editing .form-row-full{margin-bottom:8px;}
+/* ---- Review session ---- */
+.session-setup{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:6px;}
+.session-setup select{width:auto;min-width:160px;}
+
+.flashcard{
+  border:1px solid var(--grid);
+  border-radius:6px;
+  padding:30px 24px;
+  text-align:center;
+  margin:14px 0;
+  min-height:140px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+}
+.flashcard .fc-term{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:24px;
+  font-weight:600;
+}
+.flashcard .fc-meta{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;}
+.flashcard .fc-back{
+  margin-top:10px;
+  border-top:1px dashed var(--grid);
+  padding-top:14px;
+  width:100%;
+}
+.flashcard .fc-translation{font-size:16px;color:var(--ink-soft);margin-bottom:6px;}
+.flashcard .fc-note{
+  font-size:13px;
+  background:#FBF8F2;
+  border-radius:3px;
+  padding:8px 10px;
+  white-space:pre-wrap;
+  text-align:left;
+}
+.progress-row{
+  display:flex;
+  justify-content:space-between;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  color:var(--ink-soft);
+  margin-bottom:6px;
+}
+.rate-row{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
+
+/* ---- Quiz ---- */
+.quiz-question{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:20px;
+  font-weight:600;
+  text-align:center;
+  margin:16px 0;
+}
+.quiz-options{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  max-width:480px;
+  margin:0 auto;
+}
+.quiz-option{
+  border:1px solid var(--grid);
+  border-radius:4px;
+  padding:10px 14px;
+  font-size:14px;
+  text-align:left;
+  background:#fff;
+  cursor:pointer;
+  transition:border-color 0.15s, background 0.15s;
+}
+.quiz-option:hover{border-color:var(--accent);}
+.quiz-option.correct{border-color:var(--success);background:#F0F7F1;}
+.quiz-option.incorrect{border-color:var(--accent);background:#FFF3F0;}
+.quiz-option:disabled{cursor:default;}
+.quiz-progress{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  color:var(--ink-soft);
+  text-align:center;
+  margin-bottom:6px;
+}
+.quiz-score{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:26px;
+  text-align:center;
+  margin:20px 0 10px;
+}
+.center{text-align:center;}
 
 @media (max-width:640px){
   .form-grid{grid-template-columns:1fr;}
@@ -280,7 +432,10 @@ textarea{resize:vertical;min-height:54px;}
 
 <div class="filebar">
   <div>Vocabulary_Notebook <span class="tag">UX / Job Search English</span></div>
-  <div class="count" id="entry-count">0 entries</div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <span class="due-badge" id="due-badge" style="display:none;"></span>
+    <span class="count" id="entry-count">0 entries</span>
+  </div>
 </div>
 
 <div class="wrap">
@@ -288,64 +443,96 @@ textarea{resize:vertical;min-height:54px;}
   <div class="hero">
     <div class="eyebrow">My Notes</div>
     <h1>词汇 · 短语 · 句子笔记本</h1>
-    <p>把你学到的单词、短语或例句记录下来，加上中文意思和自己的笔记。所有内容会保存在这个浏览器里，下次打开自动加载。</p>
+    <p>记录单词、短语或句子，加上中文意思和笔记，并用「每日复习」和「测验」检验记忆效果。所有内容保存在这个浏览器里，下次打开自动加载。</p>
   </div>
 
-  <div class="add-frame">
-    <span class="corner tl"></span><span class="corner tr"></span>
-    <span class="corner bl"></span><span class="corner br"></span>
-    <div class="frame-label">+ 新增记录</div>
-
-    <div class="form-grid">
-      <div>
-        <label class="field-label">单词 / 短语 / 句子 (English)</label>
-        <input type="text" id="input-term" placeholder="e.g. affordance / be passionate about / I have hands-on experience...">
-      </div>
-      <div>
-        <label class="field-label">类型</label>
-        <select id="input-type">
-          <option value="word">单词 Word</option>
-          <option value="phrase">短语 Phrase</option>
-          <option value="sentence">句子 Sentence</option>
-        </select>
-      </div>
-      <div>
-        <label class="field-label">标签 Tag</label>
-        <input type="text" id="input-tag" placeholder="e.g. UX / Grammar / Interview">
-      </div>
-    </div>
-
-    <div class="form-row-full">
-      <label class="field-label">中文意思 / 翻译</label>
-      <input type="text" id="input-translation" placeholder="对应的中文意思">
-    </div>
-
-    <div class="form-row-full">
-      <label class="field-label">笔记 / 例句 / 用法说明</label>
-      <textarea id="input-note" placeholder="例句、搭配、容易混淆的点、来源等..."></textarea>
-    </div>
-
-    <button class="btn" onclick="addEntry()">添加</button>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="notes" onclick="switchTab('notes')">笔记 Notes</button>
+    <button class="tab-btn" data-tab="review" onclick="switchTab('review')">每日复习 Review <span class="badge" id="review-tab-badge" style="display:none;"></span></button>
+    <button class="tab-btn" data-tab="quiz" onclick="switchTab('quiz')">测验 Quiz</button>
   </div>
 
-  <div class="toolbar">
-    <input type="text" id="search-box" placeholder="搜索单词/短语/句子/笔记..." oninput="render()">
-    <select id="filter-type" onchange="render()">
-      <option value="">全部类型</option>
-      <option value="word">单词</option>
-      <option value="phrase">短语</option>
-      <option value="sentence">句子</option>
-    </select>
-    <select id="filter-tag" onchange="render()">
-      <option value="">全部标签</option>
-    </select>
-    <select id="sort-order" onchange="render()">
-      <option value="new">最新优先</option>
-      <option value="old">最早优先</option>
-    </select>
+  <!-- ============ NOTES TAB ============ -->
+  <div class="tab-panel active" id="tab-notes">
+
+    <div class="add-frame">
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+      <div class="frame-label">+ 新增记录</div>
+
+      <div class="form-grid">
+        <div>
+          <label class="field-label">单词 / 短语 / 句子 (English)</label>
+          <input type="text" id="input-term" placeholder="e.g. affordance / be passionate about / I have hands-on experience...">
+        </div>
+        <div>
+          <label class="field-label">类型</label>
+          <select id="input-type">
+            <option value="word">单词 Word</option>
+            <option value="phrase">短语 Phrase</option>
+            <option value="sentence">句子 Sentence</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">标签 Tag</label>
+          <input type="text" id="input-tag" placeholder="e.g. UX / Grammar / Interview">
+        </div>
+      </div>
+
+      <div class="form-row-full">
+        <label class="field-label">中文意思 / 翻译</label>
+        <input type="text" id="input-translation" placeholder="对应的中文意思">
+      </div>
+
+      <div class="form-row-full">
+        <label class="field-label">笔记 / 例句 / 用法说明</label>
+        <textarea id="input-note" placeholder="例句、搭配、容易混淆的点、来源等..."></textarea>
+      </div>
+
+      <button class="btn" onclick="addEntry()">添加</button>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" id="search-box" placeholder="搜索单词/短语/句子/笔记..." oninput="render()">
+      <select id="filter-type" onchange="render()">
+        <option value="">全部类型</option>
+        <option value="word">单词</option>
+        <option value="phrase">短语</option>
+        <option value="sentence">句子</option>
+      </select>
+      <select id="filter-tag" onchange="render()">
+        <option value="">全部标签</option>
+      </select>
+      <select id="sort-order" onchange="render()">
+        <option value="new">最新优先</option>
+        <option value="old">最早优先</option>
+      </select>
+    </div>
+
+    <div id="entries"></div>
   </div>
 
-  <div id="entries"></div>
+  <!-- ============ REVIEW TAB ============ -->
+  <div class="tab-panel" id="tab-review">
+    <div class="session-frame">
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+      <div class="frame-label">每日复习 — Flashcard Review</div>
+
+      <div id="review-content"></div>
+    </div>
+  </div>
+
+  <!-- ============ QUIZ TAB ============ -->
+  <div class="tab-panel" id="tab-quiz">
+    <div class="session-frame">
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+      <div class="frame-label">测验 — Multiple Choice Quiz</div>
+
+      <div id="quiz-content"></div>
+    </div>
+  </div>
 
 </div>
 
@@ -354,6 +541,10 @@ let entries = [];
 let editingId = null;
 
 const STORAGE_KEY = 'vocab-notebook-entries';
+const DAY = 24*60*60*1000;
+const LEVEL_INTERVALS = [1,1,2,4,7,15,30]; // days until next review, index = level
+
+/* ============ STORAGE ============ */
 
 async function loadEntries(){
   try{
@@ -364,7 +555,14 @@ async function loadEntries(){
   }catch(e){
     entries = [];
   }
+  // ensure review fields exist on older entries
+  entries.forEach(e => {
+    if(typeof e.reviewLevel !== 'number') e.reviewLevel = 0;
+    if(typeof e.nextReview !== 'number') e.nextReview = Date.now();
+    if(typeof e.lastReviewed !== 'number') e.lastReviewed = 0;
+  });
   render();
+  renderReview();
 }
 
 async function saveEntries(){
@@ -373,7 +571,35 @@ async function saveEntries(){
   }catch(e){
     console.error('Save failed', e);
   }
+  updateDueBadge();
 }
+
+/* ============ TABS ============ */
+
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  if(tab === 'review') renderReview();
+  if(tab === 'quiz') renderQuizSetup();
+}
+
+function updateDueBadge(){
+  const due = entries.filter(e => (e.translation || e.note) && e.nextReview <= Date.now()).length;
+  const filebarBadge = document.getElementById('due-badge');
+  const tabBadge = document.getElementById('review-tab-badge');
+  if(due > 0){
+    filebarBadge.style.display = 'inline-block';
+    filebarBadge.textContent = `${due} due today`;
+    tabBadge.style.display = 'inline-block';
+    tabBadge.textContent = due;
+  }else{
+    filebarBadge.style.display = 'none';
+    tabBadge.style.display = 'none';
+  }
+}
+
+/* ============ ADD / EDIT / DELETE ============ */
 
 function addEntry(){
   const term = document.getElementById('input-term').value.trim();
@@ -390,7 +616,10 @@ function addEntry(){
   entries.unshift({
     id: 'e' + Date.now(),
     term, type, tag, translation, note,
-    createdAt: Date.now()
+    createdAt: Date.now(),
+    reviewLevel: 0,
+    nextReview: Date.now(),
+    lastReviewed: 0
   });
 
   document.getElementById('input-term').value = '';
@@ -431,6 +660,8 @@ function saveEdit(id){
   render();
 }
 
+/* ============ HELPERS ============ */
+
 function typeLabel(type){
   if(type === 'word') return '单词';
   if(type === 'phrase') return '短语';
@@ -439,6 +670,7 @@ function typeLabel(type){
 }
 
 function formatDate(ts){
+  if(!ts) return '—';
   const d = new Date(ts);
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
@@ -448,6 +680,17 @@ function escapeHtml(str){
   div.textContent = str || '';
   return div.innerHTML;
 }
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ============ NOTES RENDER ============ */
 
 function updateTagFilter(){
   const tagSelect = document.getElementById('filter-tag');
@@ -460,6 +703,7 @@ function updateTagFilter(){
 
 function render(){
   updateTagFilter();
+  updateDueBadge();
 
   const search = document.getElementById('search-box').value.trim().toLowerCase();
   const typeFilter = document.getElementById('filter-type').value;
@@ -528,6 +772,7 @@ function render(){
         </div>
       `;
     }
+    const dueToday = (e.translation || e.note) && e.nextReview <= Date.now();
     return `
       <div class="entry type-${e.type}">
         <div class="entry-head">
@@ -535,6 +780,7 @@ function render(){
             <span class="entry-term">${escapeHtml(e.term)}</span>
             <span class="type-badge">${typeLabel(e.type)}</span>
             ${e.tag ? `<span class="tag-badge">${escapeHtml(e.tag)}</span>` : ''}
+            <span class="level-badge" title="复习等级 / 下次复习日期">Lv.${e.reviewLevel} · 下次 ${formatDate(e.nextReview)}${dueToday ? ' · 待复习' : ''}</span>
           </div>
           <div class="entry-actions">
             <button class="btn btn-ghost btn-sm" onclick="startEdit('${e.id}')">编辑</button>
@@ -543,13 +789,294 @@ function render(){
         </div>
         ${e.translation ? `<div class="entry-translation">${escapeHtml(e.translation)}</div>` : ''}
         ${e.note ? `<div class="entry-note">${escapeHtml(e.note)}</div>` : ''}
-        <div class="entry-date">${formatDate(e.createdAt)}</div>
+        <div class="entry-date">添加于 ${formatDate(e.createdAt)}${e.lastReviewed ? ` · 上次复习 ${formatDate(e.lastReviewed)}` : ''}</div>
       </div>
     `;
   }).join('');
 }
 
-// allow Enter key in term field to submit
+/* ============ REVIEW (Flashcards) ============ */
+
+let reviewQueue = [];
+let reviewIndex = 0;
+let reviewRevealed = false;
+let reviewStats = {known:0, vague:0, forgot:0};
+
+function reviewableEntries(){
+  return entries.filter(e => e.translation || e.note);
+}
+
+function dueEntries(){
+  const now = Date.now();
+  return reviewableEntries().filter(e => e.nextReview <= now);
+}
+
+function renderReview(){
+  const content = document.getElementById('review-content');
+  const due = dueEntries();
+  const all = reviewableEntries();
+
+  if(all.length === 0){
+    content.innerHTML = '<div class="empty-msg">还没有可复习的内容 — 先在「笔记」里添加一些带翻译或笔记的词汇吧</div>';
+    return;
+  }
+
+  if(reviewQueue.length === 0){
+    content.innerHTML = `
+      <div class="session-setup">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">
+          今日待复习：${due.length} 项 · 词汇库共 ${all.length} 项
+        </span>
+      </div>
+      <div class="btn-row" style="margin-top:14px;">
+        <button class="btn" onclick="startReview(false)" ${due.length === 0 ? 'disabled' : ''}>开始今日复习 (${due.length})</button>
+        <button class="btn btn-ghost" onclick="startReview(true)">复习全部词汇 (${all.length})</button>
+      </div>
+      ${due.length === 0 ? '<div class="empty-msg" style="margin-top:16px;">🎉 今天没有到期的复习内容，可以选择"复习全部词汇"额外练习</div>' : ''}
+    `;
+    return;
+  }
+
+  if(reviewIndex >= reviewQueue.length){
+    content.innerHTML = `
+      <div class="quiz-score">复习完成！</div>
+      <div class="center" style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">
+        记得 ${reviewStats.known} · 模糊 ${reviewStats.vague} · 忘记 ${reviewStats.forgot}
+      </div>
+      <div class="btn-row" style="justify-content:center;margin-top:18px;">
+        <button class="btn" onclick="resetReview()">返回</button>
+      </div>
+    `;
+    return;
+  }
+
+  const e = reviewQueue[reviewIndex];
+  content.innerHTML = `
+    <div class="progress-row">
+      <span>第 ${reviewIndex + 1} / ${reviewQueue.length} 项</span>
+      <span>Lv.${e.reviewLevel}</span>
+    </div>
+    <div class="flashcard">
+      <div class="fc-meta">
+        <span class="type-badge">${typeLabel(e.type)}</span>
+        ${e.tag ? `<span class="tag-badge">${escapeHtml(e.tag)}</span>` : ''}
+      </div>
+      <div class="fc-term">${escapeHtml(e.term)}</div>
+      ${reviewRevealed ? `
+        <div class="fc-back">
+          ${e.translation ? `<div class="fc-translation">${escapeHtml(e.translation)}</div>` : ''}
+          ${e.note ? `<div class="fc-note">${escapeHtml(e.note)}</div>` : ''}
+        </div>
+      ` : ''}
+    </div>
+    ${!reviewRevealed ? `
+      <div class="center"><button class="btn" onclick="revealCard()">显示答案</button></div>
+    ` : `
+      <div class="rate-row">
+        <button class="btn btn-danger" onclick="rateCard('forgot')">忘记了</button>
+        <button class="btn btn-warn" onclick="rateCard('vague')">模糊</button>
+        <button class="btn btn-success" onclick="rateCard('known')">记得</button>
+      </div>
+    `}
+  `;
+}
+
+function startReview(all){
+  reviewQueue = shuffle(all ? reviewableEntries() : dueEntries());
+  reviewIndex = 0;
+  reviewRevealed = false;
+  reviewStats = {known:0, vague:0, forgot:0};
+  renderReview();
+}
+
+function revealCard(){
+  reviewRevealed = true;
+  renderReview();
+}
+
+function rateCard(rating){
+  const e = reviewQueue[reviewIndex];
+  const now = Date.now();
+  e.lastReviewed = now;
+
+  if(rating === 'known'){
+    e.reviewLevel = Math.min(e.reviewLevel + 1, LEVEL_INTERVALS.length - 1);
+    reviewStats.known++;
+  }else if(rating === 'vague'){
+    e.reviewLevel = Math.max(e.reviewLevel - 1, 0);
+    reviewStats.vague++;
+  }else{
+    e.reviewLevel = 0;
+    reviewStats.forgot++;
+  }
+  e.nextReview = now + LEVEL_INTERVALS[e.reviewLevel] * DAY;
+
+  saveEntries();
+
+  reviewIndex++;
+  reviewRevealed = false;
+  renderReview();
+  render();
+}
+
+function resetReview(){
+  reviewQueue = [];
+  reviewIndex = 0;
+  reviewRevealed = false;
+  renderReview();
+}
+
+/* ============ QUIZ ============ */
+
+let quizQuestions = [];
+let quizIndex = 0;
+let quizScore = 0;
+let quizAnswered = false;
+
+function quizEligibleEntries(){
+  return entries.filter(e => e.translation && e.translation.trim());
+}
+
+function renderQuizSetup(){
+  const content = document.getElementById('quiz-content');
+  const eligible = quizEligibleEntries();
+
+  if(eligible.length < 2){
+    content.innerHTML = '<div class="empty-msg">至少需要2条带「中文翻译」的记录才能开始测验，先去「笔记」里补充翻译吧</div>';
+    return;
+  }
+
+  if(quizQuestions.length > 0 && quizIndex < quizQuestions.length){
+    renderQuizQuestion();
+    return;
+  }
+  if(quizQuestions.length > 0 && quizIndex >= quizQuestions.length){
+    renderQuizResult();
+    return;
+  }
+
+  const maxQ = Math.min(eligible.length, 20);
+  const options = [5,10,20].filter(n => n <= maxQ);
+  if(options.length === 0 || options[options.length-1] !== maxQ) options.push(maxQ);
+
+  content.innerHTML = `
+    <div class="session-setup">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">
+        可用题目数：${eligible.length}
+      </span>
+      <select id="quiz-count">
+        ${options.map(n => `<option value="${n}">${n} 题</option>`).join('')}
+      </select>
+      <select id="quiz-direction">
+        <option value="en2cn">看英文 → 选中文</option>
+        <option value="cn2en">看中文 → 选英文</option>
+      </select>
+    </div>
+    <div class="btn-row" style="margin-top:14px;">
+      <button class="btn" onclick="startQuiz()">开始测验</button>
+    </div>
+  `;
+}
+
+function startQuiz(){
+  const count = parseInt(document.getElementById('quiz-count').value, 10);
+  const direction = document.getElementById('quiz-direction').value;
+  const eligible = quizEligibleEntries();
+  const chosen = shuffle(eligible).slice(0, count);
+
+  quizQuestions = chosen.map(e => {
+    const correct = direction === 'en2cn' ? e.translation : e.term;
+    const pool = eligible.filter(o => o.id !== e.id);
+    const distractorsSrc = shuffle(pool).slice(0, 3);
+    const distractors = distractorsSrc.map(o => direction === 'en2cn' ? o.translation : o.term);
+    const options = shuffle([correct, ...distractors]);
+    return {
+      prompt: direction === 'en2cn' ? e.term : e.translation,
+      correct,
+      options,
+      direction
+    };
+  });
+
+  quizIndex = 0;
+  quizScore = 0;
+  quizAnswered = false;
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion(){
+  const content = document.getElementById('quiz-content');
+  const q = quizQuestions[quizIndex];
+
+  content.innerHTML = `
+    <div class="quiz-progress">第 ${quizIndex + 1} / ${quizQuestions.length} 题 · 当前得分 ${quizScore}</div>
+    <div class="quiz-question">${escapeHtml(q.prompt)}</div>
+    <div class="quiz-options">
+      ${q.options.map((opt, i) => `
+        <button class="quiz-option" id="quiz-opt-${i}" onclick="answerQuiz(${i})">${escapeHtml(opt)}</button>
+      `).join('')}
+    </div>
+  `;
+}
+
+function answerQuiz(i){
+  if(quizAnswered) return;
+  quizAnswered = true;
+
+  const q = quizQuestions[quizIndex];
+  const chosen = q.options[i];
+  const correct = chosen === q.correct;
+  if(correct) quizScore++;
+
+  q.options.forEach((opt, idx) => {
+    const btn = document.getElementById('quiz-opt-' + idx);
+    btn.disabled = true;
+    if(opt === q.correct) btn.classList.add('correct');
+    else if(idx === i) btn.classList.add('incorrect');
+  });
+
+  const content = document.getElementById('quiz-content');
+  content.innerHTML += `
+    <div class="btn-row" style="justify-content:center;margin-top:16px;">
+      <button class="btn" onclick="nextQuiz()">${quizIndex + 1 < quizQuestions.length ? '下一题' : '查看结果'}</button>
+    </div>
+  `;
+}
+
+function nextQuiz(){
+  quizIndex++;
+  quizAnswered = false;
+  if(quizIndex >= quizQuestions.length){
+    renderQuizResult();
+  }else{
+    renderQuizQuestion();
+  }
+}
+
+function renderQuizResult(){
+  const content = document.getElementById('quiz-content');
+  const total = quizQuestions.length;
+  content.innerHTML = `
+    <div class="quiz-score">${quizScore} / ${total}</div>
+    <div class="center" style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">
+      正确率 ${Math.round(quizScore/total*100)}%
+    </div>
+    <div class="btn-row" style="justify-content:center;margin-top:18px;">
+      <button class="btn" onclick="restartQuiz()">再来一次</button>
+    </div>
+  `;
+}
+
+function restartQuiz(){
+  quizQuestions = [];
+  quizIndex = 0;
+  quizScore = 0;
+  quizAnswered = false;
+  renderQuizSetup();
+}
+
+/* ============ INIT ============ */
+
 document.getElementById('input-term').addEventListener('keydown', function(e){
   if(e.key === 'Enter'){
     addEntry();
