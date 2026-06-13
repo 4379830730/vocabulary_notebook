@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Vocabulary Notebook</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --paper:#F6F3ED;
+  --ink:#1E2A45;
+  --ink-soft:#5A6478;
+  --accent:#E8542E;
+  --grid:#DCE2EC;
+  --success:#4F8A5B;
+  --muted:#9C9686;
+  --card:#FFFFFF;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family:'IBM Plex Sans',sans-serif;
+  color:var(--ink);
+  background-color:var(--paper);
+  background-image:radial-gradient(circle, var(--grid) 1px, transparent 1px);
+  background-size:22px 22px;
+  line-height:1.55;
+  padding:0 0 60px;
+}
+
+.filebar{
+  background:var(--ink);
+  color:var(--paper);
+  padding:14px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.06em;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+.filebar .tag{
+  background:var(--accent);
+  color:#fff;
+  padding:2px 8px;
+  border-radius:3px;
+  font-weight:600;
+}
+.filebar .count{
+  font-family:'IBM Plex Mono',monospace;
+}
+
+.wrap{
+  max-width:880px;
+  margin:0 auto;
+  padding:32px 20px 0;
+}
+
+.hero{margin-bottom:26px;}
+.hero .eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+}
+.hero h1{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:30px;
+  margin:0 0 8px;
+}
+.hero p{
+  max-width:620px;
+  color:var(--ink-soft);
+  font-size:14px;
+  margin:0;
+}
+
+/* ---- Add form ---- */
+.add-frame{
+  position:relative;
+  background:var(--card);
+  border:1px solid var(--ink);
+  padding:20px;
+  margin-bottom:28px;
+}
+.corner{position:absolute;width:13px;height:13px;border:2px solid var(--accent);}
+.corner.tl{top:-2px;left:-2px;border-right:none;border-bottom:none;}
+.corner.tr{top:-2px;right:-2px;border-left:none;border-bottom:none;}
+.corner.bl{bottom:-2px;left:-2px;border-right:none;border-top:none;}
+.corner.br{bottom:-2px;right:-2px;border-left:none;border-top:none;}
+
+.frame-label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin-bottom:14px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:12px;
+  margin-bottom:12px;
+}
+.form-row-full{margin-bottom:12px;}
+
+label.field-label{
+  display:block;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin-bottom:5px;
+}
+
+input[type="text"], textarea, select{
+  width:100%;
+  border:1px solid var(--grid);
+  border-radius:4px;
+  padding:9px 10px;
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:14px;
+  color:var(--ink);
+  background:#fff;
+}
+input[type="text"]:focus, textarea:focus, select:focus{
+  outline:none;
+  border-color:var(--accent);
+}
+textarea{resize:vertical;min-height:54px;}
+
+.btn{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.06em;
+  border:1px solid var(--ink);
+  border-radius:4px;
+  padding:9px 16px;
+  background:var(--ink);
+  color:#fff;
+  cursor:pointer;
+  transition:opacity 0.15s;
+}
+.btn:hover{opacity:0.85;}
+.btn-ghost{
+  background:none;
+  color:var(--ink-soft);
+  border-color:var(--grid);
+}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+.btn-danger{
+  background:none;
+  color:var(--accent);
+  border-color:var(--accent);
+}
+.btn-danger:hover{background:var(--accent);color:#fff;}
+.btn-sm{padding:5px 10px;font-size:11px;}
+
+/* ---- Toolbar ---- */
+.toolbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+  align-items:center;
+}
+.toolbar input[type="text"]{flex:1;min-width:160px;}
+.toolbar select{width:auto;min-width:130px;}
+.empty-msg{
+  text-align:center;
+  color:var(--muted);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:13px;
+  padding:40px 0;
+  border:1px dashed var(--grid);
+  border-radius:6px;
+}
+
+/* ---- Entry cards ---- */
+.entry{
+  position:relative;
+  background:var(--card);
+  border:1px solid var(--grid);
+  border-left:4px solid var(--accent);
+  border-radius:4px;
+  padding:14px 16px;
+  margin-bottom:10px;
+}
+.entry.type-phrase{border-left-color:var(--success);}
+.entry.type-sentence{border-left-color:#6C8EBF;}
+
+.entry-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+  margin-bottom:6px;
+}
+.entry-term{
+  font-family:'IBM Plex Mono',monospace;
+  font-weight:600;
+  font-size:15px;
+}
+.entry-meta{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.type-badge{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  border:1px solid var(--grid);
+  border-radius:3px;
+  padding:2px 6px;
+  color:var(--ink-soft);
+}
+.tag-badge{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.05em;
+  background:var(--paper);
+  border:1px solid var(--grid);
+  border-radius:3px;
+  padding:2px 6px;
+  color:var(--ink-soft);
+}
+.entry-translation{
+  color:var(--ink-soft);
+  font-size:13.5px;
+  margin-bottom:4px;
+}
+.entry-note{
+  font-size:13px;
+  color:var(--ink);
+  background:#FBF8F2;
+  border-radius:3px;
+  padding:8px 10px;
+  margin-top:6px;
+  white-space:pre-wrap;
+}
+.entry-date{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  color:var(--muted);
+  margin-top:6px;
+}
+.entry-actions{
+  display:flex;
+  gap:6px;
+  flex-shrink:0;
+}
+
+/* edit mode */
+.entry.editing .form-grid{margin-bottom:8px;}
+.entry.editing .form-row-full{margin-bottom:8px;}
+
+@media (max-width:640px){
+  .form-grid{grid-template-columns:1fr;}
+  .hero h1{font-size:24px;}
+}
+</style>
+</head>
+<body>
+
+<div class="filebar">
+  <div>Vocabulary_Notebook <span class="tag">UX / Job Search English</span></div>
+  <div class="count" id="entry-count">0 entries</div>
+</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">My Notes</div>
+    <h1>词汇 · 短语 · 句子笔记本</h1>
+    <p>把你学到的单词、短语或例句记录下来，加上中文意思和自己的笔记。所有内容会保存在这个浏览器里，下次打开自动加载。</p>
+  </div>
+
+  <div class="add-frame">
+    <span class="corner tl"></span><span class="corner tr"></span>
+    <span class="corner bl"></span><span class="corner br"></span>
+    <div class="frame-label">+ 新增记录</div>
+
+    <div class="form-grid">
+      <div>
+        <label class="field-label">单词 / 短语 / 句子 (English)</label>
+        <input type="text" id="input-term" placeholder="e.g. affordance / be passionate about / I have hands-on experience...">
+      </div>
+      <div>
+        <label class="field-label">类型</label>
+        <select id="input-type">
+          <option value="word">单词 Word</option>
+          <option value="phrase">短语 Phrase</option>
+          <option value="sentence">句子 Sentence</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">标签 Tag</label>
+        <input type="text" id="input-tag" placeholder="e.g. UX / Grammar / Interview">
+      </div>
+    </div>
+
+    <div class="form-row-full">
+      <label class="field-label">中文意思 / 翻译</label>
+      <input type="text" id="input-translation" placeholder="对应的中文意思">
+    </div>
+
+    <div class="form-row-full">
+      <label class="field-label">笔记 / 例句 / 用法说明</label>
+      <textarea id="input-note" placeholder="例句、搭配、容易混淆的点、来源等..."></textarea>
+    </div>
+
+    <button class="btn" onclick="addEntry()">添加</button>
+  </div>
+
+  <div class="toolbar">
+    <input type="text" id="search-box" placeholder="搜索单词/短语/句子/笔记..." oninput="render()">
+    <select id="filter-type" onchange="render()">
+      <option value="">全部类型</option>
+      <option value="word">单词</option>
+      <option value="phrase">短语</option>
+      <option value="sentence">句子</option>
+    </select>
+    <select id="filter-tag" onchange="render()">
+      <option value="">全部标签</option>
+    </select>
+    <select id="sort-order" onchange="render()">
+      <option value="new">最新优先</option>
+      <option value="old">最早优先</option>
+    </select>
+  </div>
+
+  <div id="entries"></div>
+
+</div>
+
+<script>
+let entries = [];
+let editingId = null;
+
+const STORAGE_KEY = 'vocab-notebook-entries';
+
+async function loadEntries(){
+  try{
+    const result = await window.storage.get(STORAGE_KEY, false);
+    if(result && result.value){
+      entries = JSON.parse(result.value);
+    }
+  }catch(e){
+    entries = [];
+  }
+  render();
+}
+
+async function saveEntries(){
+  try{
+    await window.storage.set(STORAGE_KEY, JSON.stringify(entries), false);
+  }catch(e){
+    console.error('Save failed', e);
+  }
+}
+
+function addEntry(){
+  const term = document.getElementById('input-term').value.trim();
+  const type = document.getElementById('input-type').value;
+  const tag = document.getElementById('input-tag').value.trim();
+  const translation = document.getElementById('input-translation').value.trim();
+  const note = document.getElementById('input-note').value.trim();
+
+  if(!term){
+    document.getElementById('input-term').focus();
+    return;
+  }
+
+  entries.unshift({
+    id: 'e' + Date.now(),
+    term, type, tag, translation, note,
+    createdAt: Date.now()
+  });
+
+  document.getElementById('input-term').value = '';
+  document.getElementById('input-tag').value = '';
+  document.getElementById('input-translation').value = '';
+  document.getElementById('input-note').value = '';
+  document.getElementById('input-term').focus();
+
+  saveEntries();
+  render();
+}
+
+function deleteEntry(id){
+  entries = entries.filter(e => e.id !== id);
+  saveEntries();
+  render();
+}
+
+function startEdit(id){
+  editingId = id;
+  render();
+}
+
+function cancelEdit(){
+  editingId = null;
+  render();
+}
+
+function saveEdit(id){
+  const entry = entries.find(e => e.id === id);
+  entry.term = document.getElementById('edit-term-'+id).value.trim();
+  entry.type = document.getElementById('edit-type-'+id).value;
+  entry.tag = document.getElementById('edit-tag-'+id).value.trim();
+  entry.translation = document.getElementById('edit-translation-'+id).value.trim();
+  entry.note = document.getElementById('edit-note-'+id).value.trim();
+  editingId = null;
+  saveEntries();
+  render();
+}
+
+function typeLabel(type){
+  if(type === 'word') return '单词';
+  if(type === 'phrase') return '短语';
+  if(type === 'sentence') return '句子';
+  return type;
+}
+
+function formatDate(ts){
+  const d = new Date(ts);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+function updateTagFilter(){
+  const tagSelect = document.getElementById('filter-tag');
+  const current = tagSelect.value;
+  const tags = [...new Set(entries.map(e => e.tag).filter(Boolean))].sort();
+  tagSelect.innerHTML = '<option value="">全部标签</option>' +
+    tags.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+  if(tags.includes(current)) tagSelect.value = current;
+}
+
+function render(){
+  updateTagFilter();
+
+  const search = document.getElementById('search-box').value.trim().toLowerCase();
+  const typeFilter = document.getElementById('filter-type').value;
+  const tagFilter = document.getElementById('filter-tag').value;
+  const sortOrder = document.getElementById('sort-order').value;
+
+  let filtered = entries.filter(e => {
+    if(typeFilter && e.type !== typeFilter) return false;
+    if(tagFilter && e.tag !== tagFilter) return false;
+    if(search){
+      const haystack = [e.term, e.translation, e.note, e.tag].join(' ').toLowerCase();
+      if(!haystack.includes(search)) return false;
+    }
+    return true;
+  });
+
+  filtered = filtered.slice().sort((a,b) => sortOrder === 'old' ? a.createdAt - b.createdAt : b.createdAt - a.createdAt);
+
+  document.getElementById('entry-count').textContent = `${entries.length} entries`;
+
+  const container = document.getElementById('entries');
+
+  if(entries.length === 0){
+    container.innerHTML = '<div class="empty-msg">还没有记录 — 在上面添加你的第一个单词、短语或句子吧</div>';
+    return;
+  }
+  if(filtered.length === 0){
+    container.innerHTML = '<div class="empty-msg">没有符合条件的记录</div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(e => {
+    if(editingId === e.id){
+      return `
+        <div class="entry editing type-${e.type}">
+          <div class="form-grid">
+            <div>
+              <label class="field-label">单词 / 短语 / 句子</label>
+              <input type="text" id="edit-term-${e.id}" value="${escapeHtml(e.term)}">
+            </div>
+            <div>
+              <label class="field-label">类型</label>
+              <select id="edit-type-${e.id}">
+                <option value="word" ${e.type==='word'?'selected':''}>单词 Word</option>
+                <option value="phrase" ${e.type==='phrase'?'selected':''}>短语 Phrase</option>
+                <option value="sentence" ${e.type==='sentence'?'selected':''}>句子 Sentence</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label">标签</label>
+              <input type="text" id="edit-tag-${e.id}" value="${escapeHtml(e.tag)}">
+            </div>
+          </div>
+          <div class="form-row-full">
+            <label class="field-label">中文意思 / 翻译</label>
+            <input type="text" id="edit-translation-${e.id}" value="${escapeHtml(e.translation)}">
+          </div>
+          <div class="form-row-full">
+            <label class="field-label">笔记 / 例句</label>
+            <textarea id="edit-note-${e.id}">${escapeHtml(e.note)}</textarea>
+          </div>
+          <div class="entry-actions">
+            <button class="btn btn-sm" onclick="saveEdit('${e.id}')">保存</button>
+            <button class="btn btn-ghost btn-sm" onclick="cancelEdit()">取消</button>
+          </div>
+        </div>
+      `;
+    }
+    return `
+      <div class="entry type-${e.type}">
+        <div class="entry-head">
+          <div class="entry-meta">
+            <span class="entry-term">${escapeHtml(e.term)}</span>
+            <span class="type-badge">${typeLabel(e.type)}</span>
+            ${e.tag ? `<span class="tag-badge">${escapeHtml(e.tag)}</span>` : ''}
+          </div>
+          <div class="entry-actions">
+            <button class="btn btn-ghost btn-sm" onclick="startEdit('${e.id}')">编辑</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteEntry('${e.id}')">删除</button>
+          </div>
+        </div>
+        ${e.translation ? `<div class="entry-translation">${escapeHtml(e.translation)}</div>` : ''}
+        ${e.note ? `<div class="entry-note">${escapeHtml(e.note)}</div>` : ''}
+        <div class="entry-date">${formatDate(e.createdAt)}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// allow Enter key in term field to submit
+document.getElementById('input-term').addEventListener('keydown', function(e){
+  if(e.key === 'Enter'){
+    addEntry();
+  }
+});
+
+loadEntries();
+</script>
+
+</body>
+</html>
