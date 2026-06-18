@@ -97,6 +97,7 @@ body{
   gap:4px;
   margin-bottom:22px;
   border-bottom:1px solid var(--grid);
+  flex-wrap: wrap;
 }
 .tab-btn{
   font-family:'IBM Plex Mono',monospace;
@@ -116,6 +117,7 @@ body{
 .tab-btn.active{
   color:var(--ink);
   border-bottom-color:var(--accent);
+  font-weight: 600;
 }
 .tab-btn .badge{
   background:var(--warn);
@@ -157,6 +159,12 @@ body{
   gap:12px;
   margin-bottom:12px;
 }
+.form-grid-2{
+  display:grid;
+  grid-template-columns:3fr 1fr;
+  gap:12px;
+  margin-bottom:12px;
+}
 .form-row-full{margin-bottom:12px;}
 
 label.field-label{
@@ -184,6 +192,11 @@ input[type="text"]:focus, textarea:focus, select:focus{
   border-color:var(--accent);
 }
 textarea{resize:vertical;min-height:54px;}
+
+.sentence-textarea {
+  min-height: 80px;
+  font-size: 15px;
+}
 
 .btn{
   font-family:'IBM Plex Mono',monospace;
@@ -233,7 +246,7 @@ textarea{resize:vertical;min-height:54px;}
   align-items:center;
 }
 .toolbar input[type="text"]{flex:1;min-width:160px;}
-.toolbar select{width:auto;min-width:130px;}
+.toolbar select{width:auto;min-width:110px;}
 .empty-msg{
   text-align:center;
   color:var(--muted);
@@ -268,12 +281,17 @@ textarea{resize:vertical;min-height:54px;}
   font-family:'IBM Plex Mono',monospace;
   font-weight:600;
   font-size:15px;
+  white-space:pre-wrap;
+  word-break:break-word;
+  line-height: 1.4;
+  flex: 1;
 }
 .entry-meta{
   display:flex;
   gap:6px;
-  align-items:center;
+  align-items:flex-start;
   flex-wrap:wrap;
+  flex: 1;
 }
 .type-badge{
   font-family:'IBM Plex Mono',monospace;
@@ -284,6 +302,7 @@ textarea{resize:vertical;min-height:54px;}
   border-radius:3px;
   padding:2px 6px;
   color:var(--ink-soft);
+  margin-top: 2px;
 }
 .tag-badge{
   font-family:'IBM Plex Mono',monospace;
@@ -294,6 +313,7 @@ textarea{resize:vertical;min-height:54px;}
   border-radius:3px;
   padding:2px 6px;
   color:var(--ink-soft);
+  margin-top: 2px;
 }
 .level-badge{
   font-family:'IBM Plex Mono',monospace;
@@ -303,11 +323,13 @@ textarea{resize:vertical;min-height:54px;}
   padding:2px 6px;
   color:var(--ink-soft);
   border:1px solid var(--grid);
+  margin-top: 2px;
 }
 .entry-translation{
   color:var(--ink-soft);
   font-size:13.5px;
   margin-bottom:4px;
+  white-space:pre-wrap;
 }
 .entry-note{
   font-size:13px;
@@ -351,6 +373,9 @@ textarea{resize:vertical;min-height:54px;}
   font-family:'Space Grotesk',sans-serif;
   font-size:24px;
   font-weight:600;
+  white-space:pre-wrap;
+  word-break:break-word;
+  line-height: 1.3;
 }
 .flashcard .fc-meta{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;}
 .flashcard .fc-back{
@@ -359,7 +384,7 @@ textarea{resize:vertical;min-height:54px;}
   padding-top:14px;
   width:100%;
 }
-.flashcard .fc-translation{font-size:16px;color:var(--ink-soft);margin-bottom:6px;}
+.flashcard .fc-translation{font-size:16px;color:var(--ink-soft);margin-bottom:6px;white-space:pre-wrap;}
 .flashcard .fc-note{
   font-size:13px;
   background:#FBF8F2;
@@ -385,6 +410,9 @@ textarea{resize:vertical;min-height:54px;}
   font-weight:600;
   text-align:center;
   margin:16px 0;
+  white-space:pre-wrap;
+  word-break:break-word;
+  line-height: 1.3;
 }
 .quiz-options{
   display:flex;
@@ -423,7 +451,7 @@ textarea{resize:vertical;min-height:54px;}
 .center{text-align:center;}
 
 @media (max-width:640px){
-  .form-grid{grid-template-columns:1fr;}
+  .form-grid, .form-grid-2 {grid-template-columns:1fr;}
   .hero h1{font-size:24px;}
 }
 </style>
@@ -442,80 +470,124 @@ textarea{resize:vertical;min-height:54px;}
 
   <div class="hero">
     <div class="eyebrow">My Notes</div>
-    <h1>词汇 · 短语 · 句子笔记本</h1>
-    <p>记录单词、短语或句子，加上中文意思和笔记，并用「每日复习」和「测验」检验记忆效果。所有内容保存在这个浏览器里，下次打开自动加载。</p>
+    <h1>词汇 · 句子笔记本</h1>
+    <p>分开记录你的单词和精彩长句，用「每日复习」和「测验」检验记忆效果。所有内容保存在这个浏览器里，下次打开自动加载。</p>
   </div>
 
   <div class="tabs">
-    <button class="tab-btn active" data-tab="notes" onclick="switchTab('notes')">笔记 Notes</button>
+    <button class="tab-btn active" data-tab="words" onclick="switchTab('words')">单词与短语 Words</button>
+    <button class="tab-btn" data-tab="sentences" onclick="switchTab('sentences')">长句记录 Sentences</button>
     <button class="tab-btn" data-tab="review" onclick="switchTab('review')">每日复习 Review <span class="badge" id="review-tab-badge" style="display:none;"></span></button>
     <button class="tab-btn" data-tab="quiz" onclick="switchTab('quiz')">测验 Quiz</button>
   </div>
 
-  <!-- ============ NOTES TAB ============ -->
-  <div class="tab-panel active" id="tab-notes">
+  <div class="tab-panel active" id="tab-words">
 
     <div class="add-frame">
       <span class="corner tl"></span><span class="corner tr"></span>
       <span class="corner bl"></span><span class="corner br"></span>
-      <div class="frame-label">+ 新增记录</div>
+      <div class="frame-label">+ 新增单词 / 短语</div>
 
       <div class="form-grid">
         <div>
-          <label class="field-label">单词 / 短语 / 句子 (English)</label>
-          <input type="text" id="input-term" placeholder="e.g. affordance / be passionate about / I have hands-on experience...">
+          <label class="field-label">单词 / 短语 (English)</label>
+          <input type="text" id="word-term" placeholder="e.g. affordance / be passionate about">
         </div>
         <div>
           <label class="field-label">类型</label>
-          <select id="input-type">
+          <select id="word-type">
             <option value="word">单词 Word</option>
             <option value="phrase">短语 Phrase</option>
-            <option value="sentence">句子 Sentence</option>
           </select>
         </div>
         <div>
           <label class="field-label">标签 Tag</label>
-          <input type="text" id="input-tag" placeholder="e.g. UX / Grammar / Interview">
+          <input type="text" id="word-tag" placeholder="e.g. UX / Interview">
         </div>
       </div>
 
       <div class="form-row-full">
         <label class="field-label">中文意思 / 翻译</label>
-        <input type="text" id="input-translation" placeholder="对应的中文意思">
+        <input type="text" id="word-translation" placeholder="对应的中文意思">
       </div>
 
       <div class="form-row-full">
-        <label class="field-label">笔记 / 例句 / 用法说明</label>
-        <textarea id="input-note" placeholder="例句、搭配、容易混淆的点、来源等..."></textarea>
+        <label class="field-label">笔记 / 例句</label>
+        <textarea id="word-note" placeholder="例句、搭配、容易混淆的点等..."></textarea>
       </div>
 
-      <button class="btn" onclick="addEntry()">添加</button>
+      <button class="btn" onclick="addEntry('word')">添加单词记录</button>
     </div>
 
     <div class="toolbar">
-      <input type="text" id="search-box" placeholder="搜索单词/短语/句子/笔记..." oninput="render()">
-      <select id="filter-type" onchange="render()">
+      <input type="text" id="search-words" placeholder="搜索单词/短语..." oninput="render()">
+      <select id="filter-type-words" onchange="render()">
         <option value="">全部类型</option>
         <option value="word">单词</option>
         <option value="phrase">短语</option>
-        <option value="sentence">句子</option>
       </select>
-      <select id="filter-tag" onchange="render()">
+      <select id="filter-tag-words" onchange="render()">
         <option value="">全部标签</option>
       </select>
-      <select id="sort-order" onchange="render()">
+      <select id="sort-words" onchange="render()">
         <option value="new">最新优先</option>
         <option value="old">最早优先</option>
       </select>
-      <button class="btn btn-ghost btn-sm" onclick="exportData()">导出备份</button>
+      <button class="btn btn-ghost btn-sm" onclick="exportData()">导出全部备份</button>
       <button class="btn btn-ghost btn-sm" onclick="document.getElementById('import-file').click()">导入备份</button>
-      <input type="file" id="import-file" accept="application/json" style="display:none;" onchange="importData(event)">
     </div>
 
-    <div id="entries"></div>
+    <div id="words-entries"></div>
   </div>
 
-  <!-- ============ REVIEW TAB ============ -->
+  <div class="tab-panel" id="tab-sentences">
+
+    <div class="add-frame">
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+      <div class="frame-label">+ 新增长句</div>
+
+      <div class="form-grid-2">
+        <div>
+          <label class="field-label">句子 (English Sentence)</label>
+          <textarea id="sentence-term" class="sentence-textarea" placeholder="e.g. I have hands-on experience in leading cross-functional teams..."></textarea>
+        </div>
+        <div>
+          <label class="field-label">标签 Tag</label>
+          <input type="text" id="sentence-tag" placeholder="e.g. Interview / Email">
+        </div>
+      </div>
+
+      <div class="form-row-full">
+        <label class="field-label">中文翻译</label>
+        <textarea id="sentence-translation" placeholder="对应的中文翻译" style="min-height: 40px;"></textarea>
+      </div>
+
+      <div class="form-row-full">
+        <label class="field-label">句型分析 / 笔记</label>
+        <textarea id="sentence-note" placeholder="这个句子好在哪里？可以替换的词有哪些？"></textarea>
+      </div>
+
+      <button class="btn" onclick="addEntry('sentence')">添加长句记录</button>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" id="search-sentences" placeholder="搜索句子..." oninput="render()">
+      <select id="filter-tag-sentences" onchange="render()">
+        <option value="">全部标签</option>
+      </select>
+      <select id="sort-sentences" onchange="render()">
+        <option value="new">最新优先</option>
+        <option value="old">最早优先</option>
+      </select>
+      <button class="btn btn-ghost btn-sm" onclick="exportData()">导出全部备份</button>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('import-file').click()">导入备份</button>
+    </div>
+
+    <div id="sentences-entries"></div>
+  </div>
+
+
   <div class="tab-panel" id="tab-review">
     <div class="session-frame">
       <span class="corner tl"></span><span class="corner tr"></span>
@@ -526,7 +598,6 @@ textarea{resize:vertical;min-height:54px;}
     </div>
   </div>
 
-  <!-- ============ QUIZ TAB ============ -->
   <div class="tab-panel" id="tab-quiz">
     <div class="session-frame">
       <span class="corner tl"></span><span class="corner tr"></span>
@@ -539,13 +610,15 @@ textarea{resize:vertical;min-height:54px;}
 
 </div>
 
+<input type="file" id="import-file" accept="application/json" style="display:none;" onchange="importData(event)">
+
 <script>
 let entries = [];
 let editingId = null;
 
 const STORAGE_KEY = 'vocab-notebook-entries';
 const DAY = 24*60*60*1000;
-const LEVEL_INTERVALS = [1,1,2,4,7,15,30]; // days until next review, index = level
+const LEVEL_INTERVALS = [1,1,2,4,7,15,30];
 
 /* ============ STORAGE ============ */
 
@@ -558,7 +631,6 @@ function loadEntries(){
   }catch(e){
     entries = [];
   }
-  // ensure review fields exist on older entries
   entries.forEach(e => {
     if(typeof e.reviewLevel !== 'number') e.reviewLevel = 0;
     if(typeof e.nextReview !== 'number') e.nextReview = Date.now();
@@ -604,16 +676,25 @@ function updateDueBadge(){
 
 /* ============ ADD / EDIT / DELETE ============ */
 
-function addEntry(){
-  const term = document.getElementById('input-term').value.trim();
-  const type = document.getElementById('input-type').value;
-  const tag = document.getElementById('input-tag').value.trim();
-  const translation = document.getElementById('input-translation').value.trim();
-  const note = document.getElementById('input-note').value.trim();
+function addEntry(mode){
+  let term, type, tag, translation, note;
 
-  if(!term){
-    document.getElementById('input-term').focus();
-    return;
+  if (mode === 'word') {
+    term = document.getElementById('word-term').value.trim();
+    type = document.getElementById('word-type').value;
+    tag = document.getElementById('word-tag').value.trim();
+    translation = document.getElementById('word-translation').value.trim();
+    note = document.getElementById('word-note').value.trim();
+    
+    if(!term){ document.getElementById('word-term').focus(); return; }
+  } else if (mode === 'sentence') {
+    term = document.getElementById('sentence-term').value.trim();
+    type = 'sentence';
+    tag = document.getElementById('sentence-tag').value.trim();
+    translation = document.getElementById('sentence-translation').value.trim();
+    note = document.getElementById('sentence-note').value.trim();
+
+    if(!term){ document.getElementById('sentence-term').focus(); return; }
   }
 
   entries.unshift({
@@ -625,11 +706,19 @@ function addEntry(){
     lastReviewed: 0
   });
 
-  document.getElementById('input-term').value = '';
-  document.getElementById('input-tag').value = '';
-  document.getElementById('input-translation').value = '';
-  document.getElementById('input-note').value = '';
-  document.getElementById('input-term').focus();
+  if (mode === 'word') {
+    document.getElementById('word-term').value = '';
+    document.getElementById('word-tag').value = '';
+    document.getElementById('word-translation').value = '';
+    document.getElementById('word-note').value = '';
+    document.getElementById('word-term').focus();
+  } else {
+    document.getElementById('sentence-term').value = '';
+    document.getElementById('sentence-tag').value = '';
+    document.getElementById('sentence-translation').value = '';
+    document.getElementById('sentence-note').value = '';
+    document.getElementById('sentence-term').focus();
+  }
 
   saveEntries();
   render();
@@ -653,11 +742,18 @@ function cancelEdit(){
 
 function saveEdit(id){
   const entry = entries.find(e => e.id === id);
-  entry.term = document.getElementById('edit-term-'+id).value.trim();
-  entry.type = document.getElementById('edit-type-'+id).value;
-  entry.tag = document.getElementById('edit-tag-'+id).value.trim();
-  entry.translation = document.getElementById('edit-translation-'+id).value.trim();
-  entry.note = document.getElementById('edit-note-'+id).value.trim();
+  if (entry.type === 'sentence') {
+    entry.term = document.getElementById('edit-sen-term-'+id).value.trim();
+    entry.tag = document.getElementById('edit-sen-tag-'+id).value.trim();
+    entry.translation = document.getElementById('edit-sen-translation-'+id).value.trim();
+    entry.note = document.getElementById('edit-sen-note-'+id).value.trim();
+  } else {
+    entry.term = document.getElementById('edit-word-term-'+id).value.trim();
+    entry.type = document.getElementById('edit-word-type-'+id).value;
+    entry.tag = document.getElementById('edit-word-tag-'+id).value.trim();
+    entry.translation = document.getElementById('edit-word-translation-'+id).value.trim();
+    entry.note = document.getElementById('edit-word-note-'+id).value.trim();
+  }
   editingId = null;
   saveEntries();
   render();
@@ -693,80 +789,80 @@ function shuffle(arr){
   return a;
 }
 
-/* ============ NOTES RENDER ============ */
+/* ============ RENDER LOGIC ============ */
 
-function updateTagFilter(){
-  const tagSelect = document.getElementById('filter-tag');
-  const current = tagSelect.value;
-  const tags = [...new Set(entries.map(e => e.tag).filter(Boolean))].sort();
-  tagSelect.innerHTML = '<option value="">全部标签</option>' +
-    tags.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
-  if(tags.includes(current)) tagSelect.value = current;
+function updateFilters(){
+  const wordsTagSelect = document.getElementById('filter-tag-words');
+  const senTagSelect = document.getElementById('filter-tag-sentences');
+  
+  const wordTags = [...new Set(entries.filter(e => e.type !== 'sentence').map(e => e.tag).filter(Boolean))].sort();
+  const senTags = [...new Set(entries.filter(e => e.type === 'sentence').map(e => e.tag).filter(Boolean))].sort();
+
+  const currentWT = wordsTagSelect.value;
+  wordsTagSelect.innerHTML = '<option value="">全部标签</option>' + wordTags.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+  if(wordTags.includes(currentWT)) wordsTagSelect.value = currentWT;
+
+  const currentST = senTagSelect.value;
+  senTagSelect.innerHTML = '<option value="">全部标签</option>' + senTags.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+  if(senTags.includes(currentST)) senTagSelect.value = currentST;
 }
 
-function render(){
-  updateTagFilter();
-  updateDueBadge();
-
-  const search = document.getElementById('search-box').value.trim().toLowerCase();
-  const typeFilter = document.getElementById('filter-type').value;
-  const tagFilter = document.getElementById('filter-tag').value;
-  const sortOrder = document.getElementById('sort-order').value;
-
-  let filtered = entries.filter(e => {
-    if(typeFilter && e.type !== typeFilter) return false;
-    if(tagFilter && e.tag !== tagFilter) return false;
-    if(search){
-      const haystack = [e.term, e.translation, e.note, e.tag].join(' ').toLowerCase();
-      if(!haystack.includes(search)) return false;
-    }
-    return true;
-  });
-
-  filtered = filtered.slice().sort((a,b) => sortOrder === 'old' ? a.createdAt - b.createdAt : b.createdAt - a.createdAt);
-
-  document.getElementById('entry-count').textContent = `${entries.length} entries`;
-
-  const container = document.getElementById('entries');
-
-  if(entries.length === 0){
-    container.innerHTML = '<div class="empty-msg">还没有记录 — 在上面添加你的第一个单词、短语或句子吧</div>';
-    return;
-  }
-  if(filtered.length === 0){
-    container.innerHTML = '<div class="empty-msg">没有符合条件的记录</div>';
-    return;
-  }
-
-  container.innerHTML = filtered.map(e => {
-    if(editingId === e.id){
+function generateEntryHTML(e) {
+  if(editingId === e.id){
+    if (e.type === 'sentence') {
+      return `
+        <div class="entry editing type-sentence">
+          <div class="form-grid-2">
+            <div>
+              <label class="field-label">句子</label>
+              <textarea id="edit-sen-term-${e.id}" class="sentence-textarea">${escapeHtml(e.term)}</textarea>
+            </div>
+            <div>
+              <label class="field-label">标签</label>
+              <input type="text" id="edit-sen-tag-${e.id}" value="${escapeHtml(e.tag)}">
+            </div>
+          </div>
+          <div class="form-row-full">
+            <label class="field-label">中文翻译</label>
+            <textarea id="edit-sen-translation-${e.id}" style="min-height: 40px;">${escapeHtml(e.translation)}</textarea>
+          </div>
+          <div class="form-row-full">
+            <label class="field-label">句型分析 / 笔记</label>
+            <textarea id="edit-sen-note-${e.id}">${escapeHtml(e.note)}</textarea>
+          </div>
+          <div class="entry-actions">
+            <button class="btn btn-sm" onclick="saveEdit('${e.id}')">保存</button>
+            <button class="btn btn-ghost btn-sm" onclick="cancelEdit()">取消</button>
+          </div>
+        </div>
+      `;
+    } else {
       return `
         <div class="entry editing type-${e.type}">
           <div class="form-grid">
             <div>
-              <label class="field-label">单词 / 短语 / 句子</label>
-              <input type="text" id="edit-term-${e.id}" value="${escapeHtml(e.term)}">
+              <label class="field-label">单词 / 短语</label>
+              <input type="text" id="edit-word-term-${e.id}" value="${escapeHtml(e.term)}">
             </div>
             <div>
               <label class="field-label">类型</label>
-              <select id="edit-type-${e.id}">
+              <select id="edit-word-type-${e.id}">
                 <option value="word" ${e.type==='word'?'selected':''}>单词 Word</option>
                 <option value="phrase" ${e.type==='phrase'?'selected':''}>短语 Phrase</option>
-                <option value="sentence" ${e.type==='sentence'?'selected':''}>句子 Sentence</option>
               </select>
             </div>
             <div>
               <label class="field-label">标签</label>
-              <input type="text" id="edit-tag-${e.id}" value="${escapeHtml(e.tag)}">
+              <input type="text" id="edit-word-tag-${e.id}" value="${escapeHtml(e.tag)}">
             </div>
           </div>
           <div class="form-row-full">
             <label class="field-label">中文意思 / 翻译</label>
-            <input type="text" id="edit-translation-${e.id}" value="${escapeHtml(e.translation)}">
+            <input type="text" id="edit-word-translation-${e.id}" value="${escapeHtml(e.translation)}">
           </div>
           <div class="form-row-full">
             <label class="field-label">笔记 / 例句</label>
-            <textarea id="edit-note-${e.id}">${escapeHtml(e.note)}</textarea>
+            <textarea id="edit-word-note-${e.id}">${escapeHtml(e.note)}</textarea>
           </div>
           <div class="entry-actions">
             <button class="btn btn-sm" onclick="saveEdit('${e.id}')">保存</button>
@@ -775,27 +871,80 @@ function render(){
         </div>
       `;
     }
-    const dueToday = (e.translation || e.note) && e.nextReview <= Date.now();
-    return `
-      <div class="entry type-${e.type}">
-        <div class="entry-head">
-          <div class="entry-meta">
-            <span class="entry-term">${escapeHtml(e.term)}</span>
+  }
+
+  const dueToday = (e.translation || e.note) && e.nextReview <= Date.now();
+  return `
+    <div class="entry type-${e.type}">
+      <div class="entry-head">
+        <div class="entry-meta">
+          <div class="entry-term">${escapeHtml(e.term)}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:4px;">
             <span class="type-badge">${typeLabel(e.type)}</span>
             ${e.tag ? `<span class="tag-badge">${escapeHtml(e.tag)}</span>` : ''}
             <span class="level-badge" title="复习等级 / 下次复习日期">Lv.${e.reviewLevel} · 下次 ${formatDate(e.nextReview)}${dueToday ? ' · 待复习' : ''}</span>
           </div>
-          <div class="entry-actions">
-            <button class="btn btn-ghost btn-sm" onclick="startEdit('${e.id}')">编辑</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteEntry('${e.id}')">删除</button>
-          </div>
         </div>
-        ${e.translation ? `<div class="entry-translation">${escapeHtml(e.translation)}</div>` : ''}
-        ${e.note ? `<div class="entry-note">${escapeHtml(e.note)}</div>` : ''}
-        <div class="entry-date">添加于 ${formatDate(e.createdAt)}${e.lastReviewed ? ` · 上次复习 ${formatDate(e.lastReviewed)}` : ''}</div>
+        <div class="entry-actions">
+          <button class="btn btn-ghost btn-sm" onclick="startEdit('${e.id}')">编辑</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteEntry('${e.id}')">删除</button>
+        </div>
       </div>
-    `;
-  }).join('');
+      ${e.translation ? `<div class="entry-translation">${escapeHtml(e.translation)}</div>` : ''}
+      ${e.note ? `<div class="entry-note">${escapeHtml(e.note)}</div>` : ''}
+      <div class="entry-date">添加于 ${formatDate(e.createdAt)}${e.lastReviewed ? ` · 上次复习 ${formatDate(e.lastReviewed)}` : ''}</div>
+    </div>
+  `;
+}
+
+function render(){
+  updateFilters();
+  updateDueBadge();
+  document.getElementById('entry-count').textContent = `总共 ${entries.length} 项记录`;
+
+  const searchW = document.getElementById('search-words').value.trim().toLowerCase();
+  const typeFilterW = document.getElementById('filter-type-words').value;
+  const tagFilterW = document.getElementById('filter-tag-words').value;
+  const sortW = document.getElementById('sort-words').value;
+
+  let wordsList = entries.filter(e => e.type !== 'sentence');
+  wordsList = wordsList.filter(e => {
+    if(typeFilterW && e.type !== typeFilterW) return false;
+    if(tagFilterW && e.tag !== tagFilterW) return false;
+    if(searchW && ![e.term, e.translation, e.note, e.tag].join(' ').toLowerCase().includes(searchW)) return false;
+    return true;
+  });
+  wordsList.sort((a,b) => sortW === 'old' ? a.createdAt - b.createdAt : b.createdAt - a.createdAt);
+  
+  const wordsContainer = document.getElementById('words-entries');
+  if(entries.filter(e => e.type !== 'sentence').length === 0){
+    wordsContainer.innerHTML = '<div class="empty-msg">还没有单词记录 — 在上方添加你的第一个单词或短语吧</div>';
+  } else if(wordsList.length === 0){
+    wordsContainer.innerHTML = '<div class="empty-msg">没有符合条件的单词记录</div>';
+  } else {
+    wordsContainer.innerHTML = wordsList.map(generateEntryHTML).join('');
+  }
+
+  const searchS = document.getElementById('search-sentences').value.trim().toLowerCase();
+  const tagFilterS = document.getElementById('filter-tag-sentences').value;
+  const sortS = document.getElementById('sort-sentences').value;
+
+  let senList = entries.filter(e => e.type === 'sentence');
+  senList = senList.filter(e => {
+    if(tagFilterS && e.tag !== tagFilterS) return false;
+    if(searchS && ![e.term, e.translation, e.note, e.tag].join(' ').toLowerCase().includes(searchS)) return false;
+    return true;
+  });
+  senList.sort((a,b) => sortS === 'old' ? a.createdAt - b.createdAt : b.createdAt - a.createdAt);
+
+  const senContainer = document.getElementById('sentences-entries');
+  if(entries.filter(e => e.type === 'sentence').length === 0){
+    senContainer.innerHTML = '<div class="empty-msg">还没有长句记录 — 在上方记录你在阅读中遇到的好句子吧</div>';
+  } else if(senList.length === 0){
+    senContainer.innerHTML = '<div class="empty-msg">没有符合条件的长句记录</div>';
+  } else {
+    senContainer.innerHTML = senList.map(generateEntryHTML).join('');
+  }
 }
 
 /* ============ REVIEW (Flashcards) ============ */
@@ -805,37 +954,54 @@ let reviewIndex = 0;
 let reviewRevealed = false;
 let reviewStats = {known:0, vague:0, forgot:0};
 
-function reviewableEntries(){
-  return entries.filter(e => e.translation || e.note);
+function reviewableEntries(mode = 'all'){
+  return entries.filter(e => {
+    if(!(e.translation || e.note)) return false;
+    if(mode === 'words' && e.type === 'sentence') return false;
+    if(mode === 'sentences' && e.type !== 'sentence') return false;
+    return true;
+  });
 }
 
-function dueEntries(){
+function dueEntries(mode = 'all'){
   const now = Date.now();
-  return reviewableEntries().filter(e => e.nextReview <= now);
+  return reviewableEntries(mode).filter(e => e.nextReview <= now);
 }
 
 function renderReview(){
   const content = document.getElementById('review-content');
-  const due = dueEntries();
-  const all = reviewableEntries();
-
-  if(all.length === 0){
-    content.innerHTML = '<div class="empty-msg">还没有可复习的内容 — 先在「笔记」里添加一些带翻译或笔记的词汇吧</div>';
-    return;
-  }
 
   if(reviewQueue.length === 0){
+    const dueWords = dueEntries('words').length;
+    const allWords = reviewableEntries('words').length;
+    const dueSens = dueEntries('sentences').length;
+    const allSens = reviewableEntries('sentences').length;
+
+    if(allWords === 0 && allSens === 0){
+      content.innerHTML = '<div class="empty-msg">还没有可复习的内容 — 先去添加一些带翻译或笔记的词汇/长句吧</div>';
+      return;
+    }
+
     content.innerHTML = `
-      <div class="session-setup">
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">
-          今日待复习：${due.length} 项 · 词汇库共 ${all.length} 项
-        </span>
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div style="border:1px solid var(--grid); border-left:4px solid var(--success); border-radius:4px; padding:16px; background:var(--card);">
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; margin-bottom:8px;">📝 单词与短语</div>
+          <div style="font-size:13px; color:var(--ink-soft); margin-bottom:14px;">今日待复习：<b>${dueWords}</b> 项（总库共 ${allWords} 项）</div>
+          <div class="btn-row">
+            <button class="btn" onclick="startReview('words', false)" ${dueWords===0?'disabled':''}>开始今日复习</button>
+            <button class="btn btn-ghost" onclick="startReview('words', true)" ${allWords===0?'disabled':''}>复习全部</button>
+          </div>
+        </div>
+        
+        <div style="border:1px solid var(--grid); border-left:4px solid #6C8EBF; border-radius:4px; padding:16px; background:var(--card);">
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; margin-bottom:8px;">📖 长句</div>
+          <div style="font-size:13px; color:var(--ink-soft); margin-bottom:14px;">今日待复习：<b>${dueSens}</b> 项（总库共 ${allSens} 项）</div>
+          <div class="btn-row">
+            <button class="btn" onclick="startReview('sentences', false)" ${dueSens===0?'disabled':''}>开始今日复习</button>
+            <button class="btn btn-ghost" onclick="startReview('sentences', true)" ${allSens===0?'disabled':''}>复习全部</button>
+          </div>
+        </div>
       </div>
-      <div class="btn-row" style="margin-top:14px;">
-        <button class="btn" onclick="startReview(false)" ${due.length === 0 ? 'disabled' : ''}>开始今日复习 (${due.length})</button>
-        <button class="btn btn-ghost" onclick="startReview(true)">复习全部词汇 (${all.length})</button>
-      </div>
-      ${due.length === 0 ? '<div class="empty-msg" style="margin-top:16px;">🎉 今天没有到期的复习内容，可以选择"复习全部词汇"额外练习</div>' : ''}
     `;
     return;
   }
@@ -847,7 +1013,7 @@ function renderReview(){
         记得 ${reviewStats.known} · 模糊 ${reviewStats.vague} · 忘记 ${reviewStats.forgot}
       </div>
       <div class="btn-row" style="justify-content:center;margin-top:18px;">
-        <button class="btn" onclick="resetReview()">返回</button>
+        <button class="btn" onclick="resetReview()">返回列表</button>
       </div>
     `;
     return;
@@ -884,50 +1050,29 @@ function renderReview(){
   `;
 }
 
-function startReview(all){
-  reviewQueue = shuffle(all ? reviewableEntries() : dueEntries());
+function startReview(mode, all){
+  reviewQueue = shuffle(all ? reviewableEntries(mode) : dueEntries(mode));
   reviewIndex = 0;
   reviewRevealed = false;
   reviewStats = {known:0, vague:0, forgot:0};
   renderReview();
 }
-
-function revealCard(){
-  reviewRevealed = true;
-  renderReview();
-}
-
+function revealCard(){ reviewRevealed = true; renderReview(); }
 function rateCard(rating){
   const e = reviewQueue[reviewIndex];
   const now = Date.now();
   e.lastReviewed = now;
-
-  if(rating === 'known'){
-    e.reviewLevel = Math.min(e.reviewLevel + 1, LEVEL_INTERVALS.length - 1);
-    reviewStats.known++;
-  }else if(rating === 'vague'){
-    e.reviewLevel = Math.max(e.reviewLevel - 1, 0);
-    reviewStats.vague++;
-  }else{
-    e.reviewLevel = 0;
-    reviewStats.forgot++;
-  }
+  if(rating === 'known'){ e.reviewLevel = Math.min(e.reviewLevel + 1, LEVEL_INTERVALS.length - 1); reviewStats.known++; }
+  else if(rating === 'vague'){ e.reviewLevel = Math.max(e.reviewLevel - 1, 0); reviewStats.vague++; }
+  else{ e.reviewLevel = 0; reviewStats.forgot++; }
   e.nextReview = now + LEVEL_INTERVALS[e.reviewLevel] * DAY;
-
   saveEntries();
-
   reviewIndex++;
   reviewRevealed = false;
   renderReview();
   render();
 }
-
-function resetReview(){
-  reviewQueue = [];
-  reviewIndex = 0;
-  reviewRevealed = false;
-  renderReview();
-}
+function resetReview(){ reviewQueue = []; reviewIndex = 0; reviewRevealed = false; renderReview(); }
 
 /* ============ QUIZ ============ */
 
@@ -936,88 +1081,97 @@ let quizIndex = 0;
 let quizScore = 0;
 let quizAnswered = false;
 
-function quizEligibleEntries(){
-  return entries.filter(e => e.translation && e.translation.trim());
+function quizEligibleEntries(mode = 'all'){
+  return entries.filter(e => {
+    if(!(e.translation && e.translation.trim())) return false;
+    if(mode === 'words' && e.type === 'sentence') return false;
+    if(mode === 'sentences' && e.type !== 'sentence') return false;
+    return true;
+  });
+}
+
+function getQuizOptionsHTML(length) {
+  const maxQ = Math.min(length, 20);
+  const options = [5,10,20].filter(n => n <= maxQ);
+  if(options.length === 0 || options[options.length-1] !== maxQ) options.push(maxQ);
+  return options.map(n => `<option value="${n}">${n} 题</option>`).join('');
 }
 
 function renderQuizSetup(){
   const content = document.getElementById('quiz-content');
-  const eligible = quizEligibleEntries();
+  if(quizQuestions.length > 0 && quizIndex < quizQuestions.length){ renderQuizQuestion(); return; }
+  if(quizQuestions.length > 0 && quizIndex >= quizQuestions.length){ renderQuizResult(); return; }
 
-  if(eligible.length < 2){
-    content.innerHTML = '<div class="empty-msg">至少需要2条带「中文翻译」的记录才能开始测验，先去「笔记」里补充翻译吧</div>';
+  const eligibleWords = quizEligibleEntries('words');
+  const eligibleSens = quizEligibleEntries('sentences');
+
+  if(eligibleWords.length < 2 && eligibleSens.length < 2){
+    content.innerHTML = '<div class="empty-msg">每种类型至少需要2条带「中文翻译」的记录才能开始测验，先去补充翻译吧</div>';
     return;
   }
-
-  if(quizQuestions.length > 0 && quizIndex < quizQuestions.length){
-    renderQuizQuestion();
-    return;
-  }
-  if(quizQuestions.length > 0 && quizIndex >= quizQuestions.length){
-    renderQuizResult();
-    return;
-  }
-
-  const maxQ = Math.min(eligible.length, 20);
-  const options = [5,10,20].filter(n => n <= maxQ);
-  if(options.length === 0 || options[options.length-1] !== maxQ) options.push(maxQ);
 
   content.innerHTML = `
-    <div class="session-setup">
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">
-        可用题目数：${eligible.length}
-      </span>
-      <select id="quiz-count">
-        ${options.map(n => `<option value="${n}">${n} 题</option>`).join('')}
-      </select>
-      <select id="quiz-direction">
-        <option value="en2cn">看英文 → 选中文</option>
-        <option value="cn2en">看中文 → 选英文</option>
-      </select>
-    </div>
-    <div class="btn-row" style="margin-top:14px;">
-      <button class="btn" onclick="startQuiz()">开始测验</button>
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div style="border:1px solid var(--grid); border-left:4px solid var(--success); border-radius:4px; padding:16px; background:var(--card); opacity:${eligibleWords.length < 2 ? '0.5' : '1'}">
+        <div style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; margin-bottom:8px;">📝 单词与短语测验</div>
+        <div class="session-setup">
+          <span style="font-size:13px; color:var(--ink-soft); margin-right:10px;">可用题目：${eligibleWords.length}</span>
+          ${eligibleWords.length >= 2 ? `
+            <select id="quiz-count-words">${getQuizOptionsHTML(eligibleWords.length)}</select>
+            <select id="quiz-direction-words">
+              <option value="en2cn">看英文 → 选中文</option>
+              <option value="cn2en">看中文 → 选英文</option>
+            </select>
+          ` : '<span style="font-size:12px;color:var(--accent);">需至少 2 个带翻译的记录</span>'}
+        </div>
+        <div class="btn-row" style="margin-top:14px;">
+          <button class="btn" onclick="startQuiz('words')" ${eligibleWords.length < 2 ? 'disabled' : ''}>开始测验</button>
+        </div>
+      </div>
+
+      <div style="border:1px solid var(--grid); border-left:4px solid #6C8EBF; border-radius:4px; padding:16px; background:var(--card); opacity:${eligibleSens.length < 2 ? '0.5' : '1'}">
+        <div style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; margin-bottom:8px;">📖 长句测验</div>
+        <div class="session-setup">
+          <span style="font-size:13px; color:var(--ink-soft); margin-right:10px;">可用题目：${eligibleSens.length}</span>
+          ${eligibleSens.length >= 2 ? `
+            <select id="quiz-count-sentences">${getQuizOptionsHTML(eligibleSens.length)}</select>
+            <select id="quiz-direction-sentences">
+              <option value="en2cn">看英文 → 选中文</option>
+              <option value="cn2en">看中文 → 选英文</option>
+            </select>
+          ` : '<span style="font-size:12px;color:var(--accent);">需至少 2 个带翻译的记录</span>'}
+        </div>
+        <div class="btn-row" style="margin-top:14px;">
+          <button class="btn" onclick="startQuiz('sentences')" ${eligibleSens.length < 2 ? 'disabled' : ''}>开始测验</button>
+        </div>
+      </div>
     </div>
   `;
 }
 
-function startQuiz(){
-  const count = parseInt(document.getElementById('quiz-count').value, 10);
-  const direction = document.getElementById('quiz-direction').value;
-  const eligible = quizEligibleEntries();
+function startQuiz(mode){
+  const count = parseInt(document.getElementById(`quiz-count-${mode}`).value, 10);
+  const direction = document.getElementById(`quiz-direction-${mode}`).value;
+  const eligible = quizEligibleEntries(mode);
   const chosen = shuffle(eligible).slice(0, count);
-
   quizQuestions = chosen.map(e => {
     const correct = direction === 'en2cn' ? e.translation : e.term;
     const pool = eligible.filter(o => o.id !== e.id);
-    const distractorsSrc = shuffle(pool).slice(0, 3);
-    const distractors = distractorsSrc.map(o => direction === 'en2cn' ? o.translation : o.term);
-    const options = shuffle([correct, ...distractors]);
-    return {
-      prompt: direction === 'en2cn' ? e.term : e.translation,
-      correct,
-      options,
-      direction
-    };
+    const distractors = shuffle(pool).slice(0, 3).map(o => direction === 'en2cn' ? o.translation : o.term);
+    return { prompt: direction === 'en2cn' ? e.term : e.translation, correct, options: shuffle([correct, ...distractors]), direction };
   });
-
-  quizIndex = 0;
-  quizScore = 0;
-  quizAnswered = false;
+  quizIndex = 0; quizScore = 0; quizAnswered = false;
   renderQuizQuestion();
 }
 
 function renderQuizQuestion(){
   const content = document.getElementById('quiz-content');
   const q = quizQuestions[quizIndex];
-
   content.innerHTML = `
-    <div class="quiz-progress">第 ${quizIndex + 1} / ${quizQuestions.length} 题 · 当前得分 ${quizScore}</div>
+    <div class="quiz-progress">第 ${quizIndex + 1} / ${quizQuestions.length} 题 · 得分 ${quizScore}</div>
     <div class="quiz-question">${escapeHtml(q.prompt)}</div>
     <div class="quiz-options">
-      ${q.options.map((opt, i) => `
-        <button class="quiz-option" id="quiz-opt-${i}" onclick="answerQuiz(${i})">${escapeHtml(opt)}</button>
-      `).join('')}
+      ${q.options.map((opt, i) => `<button class="quiz-option" id="quiz-opt-${i}" onclick="answerQuiz(${i})">${escapeHtml(opt)}</button>`).join('')}
     </div>
   `;
 }
@@ -1025,71 +1179,43 @@ function renderQuizQuestion(){
 function answerQuiz(i){
   if(quizAnswered) return;
   quizAnswered = true;
-
   const q = quizQuestions[quizIndex];
-  const chosen = q.options[i];
-  const correct = chosen === q.correct;
-  if(correct) quizScore++;
-
+  if(q.options[i] === q.correct) quizScore++;
   q.options.forEach((opt, idx) => {
     const btn = document.getElementById('quiz-opt-' + idx);
     btn.disabled = true;
     if(opt === q.correct) btn.classList.add('correct');
     else if(idx === i) btn.classList.add('incorrect');
   });
-
-  const content = document.getElementById('quiz-content');
-  content.innerHTML += `
-    <div class="btn-row" style="justify-content:center;margin-top:16px;">
-      <button class="btn" onclick="nextQuiz()">${quizIndex + 1 < quizQuestions.length ? '下一题' : '查看结果'}</button>
-    </div>
-  `;
+  document.getElementById('quiz-content').innerHTML += `<div class="btn-row" style="justify-content:center;margin-top:16px;"><button class="btn" onclick="nextQuiz()">${quizIndex + 1 < quizQuestions.length ? '下一题' : '查看结果'}</button></div>`;
 }
 
 function nextQuiz(){
-  quizIndex++;
-  quizAnswered = false;
-  if(quizIndex >= quizQuestions.length){
-    renderQuizResult();
-  }else{
-    renderQuizQuestion();
-  }
+  quizIndex++; quizAnswered = false;
+  if(quizIndex >= quizQuestions.length) renderQuizResult();
+  else renderQuizQuestion();
 }
 
 function renderQuizResult(){
-  const content = document.getElementById('quiz-content');
-  const total = quizQuestions.length;
-  content.innerHTML = `
-    <div class="quiz-score">${quizScore} / ${total}</div>
-    <div class="center" style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">
-      正确率 ${Math.round(quizScore/total*100)}%
-    </div>
-    <div class="btn-row" style="justify-content:center;margin-top:18px;">
-      <button class="btn" onclick="restartQuiz()">再来一次</button>
-    </div>
+  document.getElementById('quiz-content').innerHTML = `
+    <div class="quiz-score">${quizScore} / ${quizQuestions.length}</div>
+    <div class="center" style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">正确率 ${Math.round(quizScore/quizQuestions.length*100)}%</div>
+    <div class="btn-row" style="justify-content:center;margin-top:18px;"><button class="btn" onclick="restartQuiz()">再来一次</button></div>
   `;
 }
 
-function restartQuiz(){
-  quizQuestions = [];
-  quizIndex = 0;
-  quizScore = 0;
-  quizAnswered = false;
-  renderQuizSetup();
-}
+function restartQuiz(){ quizQuestions = []; quizIndex = 0; quizScore = 0; quizAnswered = false; renderQuizSetup(); }
+
+/* ============ EXPORT / IMPORT ============ */
 
 function exportData(){
   const blob = new Blob([JSON.stringify(entries, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  const date = new Date();
-  const stamp = date.getFullYear() + '-' + String(date.getMonth()+1).padStart(2,'0') + '-' + String(date.getDate()).padStart(2,'0');
-  a.href = url;
-  a.download = `vocab-notebook-backup-${stamp}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  const d = new Date();
+  const stamp = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  a.href = url; a.download = `vocab-notebook-backup-${stamp}.json`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
 }
 
 function importData(event){
@@ -1100,28 +1226,17 @@ function importData(event){
     try{
       const imported = JSON.parse(e.target.result);
       if(!Array.isArray(imported)) throw new Error('Invalid format');
-      const merge = confirm(`导入 ${imported.length} 条记录。\n点"确定"合并到现有记录，点"取消"替换全部现有记录。`);
-      if(merge){
+      if(confirm(`导入 ${imported.length} 条记录。\n点"确定"合并到现有记录，点"取消"替换全部现有记录。`)){
         const existingIds = new Set(entries.map(en => en.id));
-        imported.forEach(im => {
-          if(!existingIds.has(im.id)){
-            entries.unshift(im);
-          }
-        });
-      }else{
-        entries = imported;
-      }
+        imported.forEach(im => { if(!existingIds.has(im.id)) entries.unshift(im); });
+      }else{ entries = imported; }
       entries.forEach(e => {
         if(typeof e.reviewLevel !== 'number') e.reviewLevel = 0;
         if(typeof e.nextReview !== 'number') e.nextReview = Date.now();
         if(typeof e.lastReviewed !== 'number') e.lastReviewed = 0;
       });
-      saveEntries();
-      render();
-      renderReview();
-    }catch(err){
-      alert('导入失败：文件格式不正确');
-    }
+      saveEntries(); render(); renderReview();
+    }catch(err){ alert('导入失败：文件格式不正确'); }
     event.target.value = '';
   };
   reader.readAsText(file);
@@ -1129,10 +1244,12 @@ function importData(event){
 
 /* ============ INIT ============ */
 
-document.getElementById('input-term').addEventListener('keydown', function(e){
-  if(e.key === 'Enter'){
-    addEntry();
-  }
+document.getElementById('word-term').addEventListener('keydown', function(e){
+  if(e.key === 'Enter') { addEntry('word'); }
+});
+
+document.getElementById('sentence-term').addEventListener('keydown', function(e){
+  if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { addEntry('sentence'); }
 });
 
 loadEntries();
