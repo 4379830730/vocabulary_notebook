@@ -414,9 +414,211 @@ textarea{resize:vertical;min-height:54px;}
 .speak-btn:hover{background:var(--ink);border-color:var(--ink);color:#fff;}
 .speak-btn:active{transform:scale(0.94);}
 .speak-btn.speaking{background:var(--accent);border-color:var(--accent);color:#fff;}
+.speak-icon{
+  width:14px;
+  height:14px;
+  object-fit:contain;
+  display:block;
+  pointer-events:none;
+}
+.root-word-node .speak-btn .speak-icon{width:11px;height:11px;}
 .entry-term-row{display:flex;align-items:flex-start;gap:6px;}
 .fc-term-row{display:flex;align-items:center;justify-content:center;gap:8px;}
 .quiz-question-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;}
+
+/* ============ ROOT NOTES (wireframe tree diagram) ============ */
+
+#roots-list{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+.root-card{
+  position:relative;
+  background:var(--card);
+  border:1px solid var(--ink);
+  border-radius:4px;
+  padding:20px 20px 18px;
+}
+.root-card-actions{
+  position:absolute;
+  top:14px;
+  right:16px;
+  display:flex;
+  gap:6px;
+}
+.root-node-wrap{
+  display:flex;
+  justify-content:center;
+}
+.root-node{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  background:var(--ink);
+  color:#fff;
+  padding:10px 22px;
+  border-radius:6px;
+  position:relative;
+  z-index:2;
+}
+.root-node-text{
+  font-family:'Open Sans',sans-serif;
+  font-weight:800;
+  font-size:18px;
+  letter-spacing:0.01em;
+}
+.root-node-meaning{
+  font-size:13px;
+  opacity:0.85;
+}
+.root-node .speak-btn{
+  border-color:rgba(255,255,255,0.5);
+  background:transparent;
+  color:#fff;
+}
+.root-node .speak-btn:hover{background:#fff;color:var(--ink);}
+.root-stem-down{
+  width:2px;
+  height:20px;
+  background:var(--grid);
+  margin:0 auto;
+}
+.root-branches-wrap{
+  position:relative;
+  padding-top:20px;
+}
+.root-branches-wrap::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:10%;
+  right:10%;
+  height:2px;
+  background:var(--grid);
+}
+.root-branches{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:flex-start;
+  gap:16px 14px;
+  position:relative;
+}
+.root-word-branch{
+  position:relative;
+  padding-top:20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.root-word-branch::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:50%;
+  width:2px;
+  height:20px;
+  background:var(--grid);
+  transform:translateX(-50%);
+}
+.root-word-node{
+  position:relative;
+  width:150px;
+  background:#fff;
+  border:1px solid var(--grid);
+  border-left:3px solid var(--success);
+  border-radius:4px;
+  padding:9px 10px 8px;
+  text-align:center;
+}
+.root-word-branch[data-depth="2"] .root-word-node{border-left-color:#6C8EBF;}
+.root-word-branch[data-depth="3"] .root-word-node{border-left-color:var(--accent);}
+.root-word-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+}
+.root-word-text{
+  font-family:'Open Sans',sans-serif;
+  font-weight:600;
+  font-size:14px;
+  word-break:break-word;
+}
+.root-word-meaning{
+  font-size:12px;
+  color:var(--ink-soft);
+  margin-top:3px;
+  word-break:break-word;
+}
+.root-word-del{
+  position:absolute;
+  top:-8px;
+  right:-8px;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  border:1px solid var(--grid);
+  background:#fff;
+  color:var(--ink-soft);
+  font-size:12px;
+  line-height:1;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  transition:opacity 0.15s;
+}
+.root-word-node:hover .root-word-del{opacity:1;}
+.root-word-del:hover{background:var(--accent);border-color:var(--accent);color:#fff;}
+.root-word-add-child{
+  margin-top:6px;
+  width:100%;
+  font-size:10.5px;
+  padding:3px 6px;
+  border:1px dashed var(--grid);
+  background:transparent;
+  color:var(--ink-soft);
+  border-radius:3px;
+  cursor:pointer;
+  font-family:'Open Sans',sans-serif;
+}
+.root-word-add-child:hover{border-color:var(--accent);color:var(--accent);}
+.child-add-form{
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  width:150px;
+  margin-top:8px;
+  padding-top:8px;
+  border-top:1px dashed var(--grid);
+}
+.child-add-form.open{display:flex;}
+.child-add-form input{
+  font-size:12px;
+  padding:5px 7px;
+}
+.child-add-form .btn{align-self:flex-end;}
+.root-empty-hint{
+  text-align:center;
+  color:var(--ink-soft);
+  font-size:13px;
+  padding:14px 0 4px;
+}
+.root-add-word-row{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:18px;
+  padding-top:14px;
+  border-top:1px dashed var(--grid);
+}
+.root-add-word-row input{
+  flex:1;
+  min-width:110px;
+}
 
 /* ---- Review session ---- */
 .session-setup{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:6px;}
@@ -543,6 +745,7 @@ textarea{resize:vertical;min-height:54px;}
   <div class="tabs">
     <button class="tab-btn active" data-tab="words" onclick="switchTab('words')">单词与短语 Words</button>
     <button class="tab-btn" data-tab="sentences" onclick="switchTab('sentences')">长句记录 Sentences</button>
+    <button class="tab-btn" data-tab="roots" onclick="switchTab('roots')">词根笔记 Roots</button>
     <button class="tab-btn" data-tab="review" onclick="switchTab('review')">每日复习 Review <span class="badge" id="review-tab-badge" style="display:none;"></span></button>
     <button class="tab-btn" data-tab="quiz" onclick="switchTab('quiz')">测验 Quiz</button>
   </div>
@@ -654,6 +857,48 @@ textarea{resize:vertical;min-height:54px;}
   </div>
 
 
+  <div class="tab-panel" id="tab-roots">
+
+    <div class="add-frame">
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+      <div class="frame-label">+ 新增词根</div>
+
+      <div class="form-grid">
+        <div>
+          <label class="field-label">词根 Root</label>
+          <input type="text" id="root-term" placeholder="e.g. spect / port / dict">
+        </div>
+        <div>
+          <label class="field-label">词根含义</label>
+          <input type="text" id="root-meaning" placeholder="e.g. 看，看见">
+        </div>
+      </div>
+
+      <div class="form-row-full">
+        <label class="field-label">第一个派生词（可选，之后可以随时继续添加）</label>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <input type="text" id="root-first-word" placeholder="e.g. inspect" style="flex:1;min-width:140px;">
+          <input type="text" id="root-first-meaning" placeholder="意思，e.g. 检查，视察" style="flex:1;min-width:140px;">
+        </div>
+      </div>
+
+      <button class="btn" onclick="addRootGroup()">创建词根笔记</button>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" id="search-roots" placeholder="搜索词根或派生词..." oninput="renderRoots()">
+      <select id="sort-roots" onchange="renderRoots()">
+        <option value="new">最新优先</option>
+        <option value="old">最早优先</option>
+      </select>
+      <button class="btn btn-ghost btn-sm" onclick="exportData()">导出全部备份</button>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('import-file').click()">导入备份</button>
+    </div>
+
+    <div id="roots-list"></div>
+  </div>
+
   <div class="tab-panel" id="tab-review">
     <div class="session-frame">
       <span class="corner tl"></span><span class="corner tr"></span>
@@ -681,8 +926,10 @@ textarea{resize:vertical;min-height:54px;}
 <script>
 let entries = [];
 let editingId = null;
+let roots = [];
 
 const STORAGE_KEY = 'vocab-notebook-entries';
+const ROOTS_KEY = 'vocab-notebook-roots';
 const DAY = 24*60*60*1000;
 const LEVEL_INTERVALS = [1,1,2,4,7,15,30];
 
@@ -715,6 +962,42 @@ function saveEntries(){
   updateDueBadge();
 }
 
+/* ---- Roots storage ---- */
+
+function loadRoots(){
+  try{
+    const raw = localStorage.getItem(ROOTS_KEY);
+    if(raw) roots = JSON.parse(raw);
+  }catch(e){
+    roots = [];
+  }
+  normalizeRoots(roots);
+  renderRoots();
+}
+
+// 兼容旧数据：确保每个词根有 words 数组，每个派生词节点（不论层级）都有 children 数组
+function normalizeRoots(rootList){
+  rootList.forEach(r => {
+    if(!Array.isArray(r.words)) r.words = [];
+    if(typeof r.createdAt !== 'number') r.createdAt = Date.now();
+    normalizeWordNodes(r.words);
+  });
+}
+function normalizeWordNodes(nodes){
+  nodes.forEach(n => {
+    if(!Array.isArray(n.children)) n.children = [];
+    normalizeWordNodes(n.children);
+  });
+}
+
+function saveRoots(){
+  try{
+    localStorage.setItem(ROOTS_KEY, JSON.stringify(roots));
+  }catch(e){
+    console.error('Save failed', e);
+  }
+}
+
 /* ============ TABS ============ */
 
 function switchTab(tab){
@@ -723,6 +1006,7 @@ function switchTab(tab){
   document.getElementById('tab-' + tab).classList.add('active');
   if(tab === 'review') renderReview();
   if(tab === 'quiz') renderQuizSetup();
+  if(tab === 'roots') renderRoots();
 }
 
 function updateDueBadge(){
@@ -738,6 +1022,240 @@ function updateDueBadge(){
     filebarBadge.style.display = 'none';
     tabBadge.style.display = 'none';
   }
+}
+
+/* ============ ROOT NOTES (add / edit / delete / render) ============ */
+/* 每个词根下的 words 是一棵树：每个词节点 {id, word, meaning, children:[]}
+   children 里的元素结构完全相同，因此派生词可以再有自己的派生词，层级不限。 */
+
+function addRootGroup(){
+  const term = document.getElementById('root-term').value.trim();
+  const meaning = document.getElementById('root-meaning').value.trim();
+  const firstWord = document.getElementById('root-first-word').value.trim();
+  const firstMeaning = document.getElementById('root-first-meaning').value.trim();
+
+  if(!term){ document.getElementById('root-term').focus(); return; }
+
+  const words = [];
+  if(firstWord){
+    words.push({ id: 'rw' + Date.now(), word: firstWord, meaning: firstMeaning, children: [] });
+  }
+
+  roots.unshift({
+    id: 'r' + Date.now(),
+    root: term,
+    meaning: meaning,
+    words: words,
+    createdAt: Date.now()
+  });
+
+  document.getElementById('root-term').value = '';
+  document.getElementById('root-meaning').value = '';
+  document.getElementById('root-first-word').value = '';
+  document.getElementById('root-first-meaning').value = '';
+  document.getElementById('root-term').focus();
+
+  saveRoots();
+  renderRoots();
+}
+
+// 在某个节点数组（可能是根的 words，也可能是某个词的 children）中递归查找指定 id 的节点
+function findWordNode(nodes, nodeId){
+  for(const n of nodes){
+    if(n.id === nodeId) return n;
+    if(n.children && n.children.length){
+      const found = findWordNode(n.children, nodeId);
+      if(found) return found;
+    }
+  }
+  return null;
+}
+
+// 在节点树中递归查找并删除指定 id 的节点（同时会删掉它下面所有的派生词）
+function removeWordNode(nodes, nodeId){
+  const idx = nodes.findIndex(n => n.id === nodeId);
+  if(idx !== -1){ nodes.splice(idx, 1); return true; }
+  for(const n of nodes){
+    if(n.children && n.children.length && removeWordNode(n.children, nodeId)) return true;
+  }
+  return false;
+}
+
+// 添加根一级的派生词（卡片底部常驻的那个输入框）
+function addWordToRoot(rootId){
+  const wordInput = document.getElementById('add-word-' + rootId);
+  const meaningInput = document.getElementById('add-word-meaning-' + rootId);
+  const word = wordInput.value.trim();
+  const meaning = meaningInput.value.trim();
+  if(!word){ wordInput.focus(); return; }
+
+  const r = roots.find(x => x.id === rootId);
+  if(!r) return;
+  r.words.push({ id: 'rw' + Date.now(), word, meaning, children: [] });
+  saveRoots();
+  renderRoots();
+
+  requestAnimationFrame(() => {
+    const again = document.getElementById('add-word-' + rootId);
+    if(again) again.focus();
+  });
+}
+
+// 展开/收起某个派生词节点上的"添加派生词的派生词"小表单
+function toggleChildForm(nodeId){
+  const form = document.getElementById('child-form-' + nodeId);
+  if(!form) return;
+  const isOpen = form.classList.toggle('open');
+  if(isOpen){
+    const input = document.getElementById('child-word-' + nodeId);
+    if(input) input.focus();
+  }
+}
+
+// 给任意一个派生词节点添加它自己的派生词（可以无限层级）
+function addChildWord(rootId, parentNodeId){
+  const r = roots.find(x => x.id === rootId);
+  if(!r) return;
+  const parent = findWordNode(r.words, parentNodeId);
+  if(!parent) return;
+
+  const wordInput = document.getElementById('child-word-' + parentNodeId);
+  const meaningInput = document.getElementById('child-meaning-' + parentNodeId);
+  const word = wordInput.value.trim();
+  const meaning = meaningInput.value.trim();
+  if(!word){ wordInput.focus(); return; }
+
+  if(!Array.isArray(parent.children)) parent.children = [];
+  parent.children.push({ id: 'rw' + Date.now(), word, meaning, children: [] });
+  saveRoots();
+  renderRoots();
+}
+
+// 删除任意层级的一个派生词节点（含它自己的所有子派生词）
+function deleteWordNode(rootId, nodeId){
+  const r = roots.find(x => x.id === rootId);
+  if(!r) return;
+  removeWordNode(r.words, nodeId);
+  saveRoots();
+  renderRoots();
+}
+
+function deleteRoot(rootId){
+  if(!confirm('确定要删除这个词根笔记吗？这会一并删除它下面的所有派生词。')) return;
+  roots = roots.filter(r => r.id !== rootId);
+  saveRoots();
+  renderRoots();
+}
+
+function editRootMeta(rootId){
+  const r = roots.find(x => x.id === rootId);
+  if(!r) return;
+  const newRoot = prompt('词根：', r.root);
+  if(newRoot === null) return;
+  const newMeaning = prompt('词根含义：', r.meaning || '');
+  if(newMeaning === null) return;
+  r.root = newRoot.trim() || r.root;
+  r.meaning = newMeaning.trim();
+  saveRoots();
+  renderRoots();
+}
+
+// 递归搜索：词根本身，或者树中任意一层的任意一个派生词命中关键词，就算匹配
+function nodeMatchesSearch(nodes, search){
+  return nodes.some(n =>
+    n.word.toLowerCase().includes(search) ||
+    (n.meaning && n.meaning.toLowerCase().includes(search)) ||
+    (n.children && n.children.length && nodeMatchesSearch(n.children, search))
+  );
+}
+
+function renderRoots(){
+  const container = document.getElementById('roots-list');
+  if(!container) return;
+
+  const searchEl = document.getElementById('search-roots');
+  const sortEl = document.getElementById('sort-roots');
+  const search = (searchEl ? searchEl.value : '').trim().toLowerCase();
+  const sort = sortEl ? sortEl.value : 'new';
+
+  let list = roots.slice();
+
+  if(search){
+    list = list.filter(r =>
+      r.root.toLowerCase().includes(search) ||
+      (r.meaning && r.meaning.toLowerCase().includes(search)) ||
+      nodeMatchesSearch(r.words, search)
+    );
+  }
+
+  list.sort((a,b) => sort === 'old' ? a.createdAt - b.createdAt : b.createdAt - a.createdAt);
+
+  if(list.length === 0){
+    container.innerHTML = `<div class="empty-msg">${roots.length === 0 ? '还没有词根笔记 — 在上方创建第一个吧（比如 spect = 看，见）' : '没有找到匹配的词根笔记'}</div>`;
+    return;
+  }
+
+  container.innerHTML = list.map(renderRootCard).join('');
+}
+
+// 递归渲染一层派生词的分支（连接线 + 节点框 + 它自己的子分支）
+function renderWordTree(nodes, rootId, depth){
+  if(!nodes || nodes.length === 0) return '';
+  return `
+    <div class="root-stem-down"></div>
+    <div class="root-branches-wrap">
+      <div class="root-branches">
+        ${nodes.map(n => renderWordBranch(n, rootId, depth)).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderWordBranch(node, rootId, depth){
+  const children = Array.isArray(node.children) ? node.children : [];
+  return `
+    <div class="root-word-branch" data-depth="${depth}">
+      <div class="root-word-node">
+        <button class="root-word-del" onclick="deleteWordNode('${rootId}','${node.id}')" title="删除（含它自己的所有派生词）">×</button>
+        <div class="root-word-row">
+          <span class="root-word-text">${escapeHtml(node.word)}</span>
+          <button class="speak-btn" style="width:20px;height:20px;font-size:11px;" onclick="speakText(this.closest('.root-word-node').querySelector('.root-word-text').textContent, this)" title="朗读发音"><img src="sound.png" alt="朗读" class="speak-icon"></button>
+        </div>
+        ${node.meaning ? `<div class="root-word-meaning">${escapeHtml(node.meaning)}</div>` : ''}
+        <button class="root-word-add-child" onclick="toggleChildForm('${node.id}')" title="给这个词再加一个派生词">+ 派生词</button>
+      </div>
+      <div class="child-add-form" id="child-form-${node.id}">
+        <input type="text" id="child-word-${node.id}" placeholder="派生词" onkeydown="if(event.key==='Enter'){document.getElementById('child-meaning-${node.id}').focus();}">
+        <input type="text" id="child-meaning-${node.id}" placeholder="意思" onkeydown="if(event.key==='Enter'){addChildWord('${rootId}','${node.id}');}">
+        <button class="btn btn-sm" onclick="addChildWord('${rootId}','${node.id}')">添加</button>
+      </div>
+      ${renderWordTree(children, rootId, depth + 1)}
+    </div>
+  `;
+}
+
+function renderRootCard(r){
+  return `
+  <div class="root-card">
+    <div class="root-card-actions">
+      <button class="btn btn-ghost btn-sm" onclick="editRootMeta('${r.id}')">编辑</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteRoot('${r.id}')">删除</button>
+    </div>
+    <div class="root-node-wrap">
+      <div class="root-node">
+        <span class="root-node-text">${escapeHtml(r.root)}</span>
+        ${r.meaning ? `<span class="root-node-meaning">${escapeHtml(r.meaning)}</span>` : ''}
+        <button class="speak-btn" onclick="speakText(this.closest('.root-node').querySelector('.root-node-text').textContent, this)" title="朗读发音"><img src="sound.png" alt="朗读" class="speak-icon"></button>
+      </div>
+    </div>
+    ${r.words.length ? renderWordTree(r.words, r.id, 1) : `<div class="root-empty-hint">还没有派生词，在下方添加第一个吧</div>`}
+    <div class="root-add-word-row">
+      <input type="text" id="add-word-${r.id}" placeholder="派生词，e.g. respect" onkeydown="if(event.key==='Enter'){document.getElementById('add-word-meaning-${r.id}').focus();}">
+      <input type="text" id="add-word-meaning-${r.id}" placeholder="意思" onkeydown="if(event.key==='Enter'){addWordToRoot('${r.id}');}">
+      <button class="btn btn-sm" onclick="addWordToRoot('${r.id}')">+ 添加</button>
+    </div>
+  </div>
+  `;
 }
 
 /* ============ ADD / EDIT / DELETE ============ */
@@ -979,7 +1497,7 @@ function generateEntryHTML(e) {
     <div class="entry type-${e.type}">
       <div class="entry-term-row">
         <div class="entry-term">${escapeHtml(e.term)}</div>
-        <button class="speak-btn" onclick="speakEntry('${e.id}', this)" title="朗读发音">🔊</button>
+        <button class="speak-btn" onclick="speakEntry('${e.id}', this)" title="朗读发音"><img src="sound.png" alt="朗读" class="speak-icon"></button>
       </div>
       <div class="entry-badges">
         <span class="type-badge">${typeLabel(e.type)}</span>
@@ -1134,7 +1652,7 @@ function renderReview(){
       </div>
       <div class="fc-term-row">
         <div class="fc-term">${escapeHtml(e.term)}</div>
-        <button class="speak-btn" onclick="speakEntry('${e.id}', this)" title="朗读发音">🔊</button>
+        <button class="speak-btn" onclick="speakEntry('${e.id}', this)" title="朗读发音"><img src="sound.png" alt="朗读" class="speak-icon"></button>
       </div>
       ${reviewRevealed ? `
         <div class="fc-back">
@@ -1276,7 +1794,7 @@ function renderQuizQuestion(){
     <div class="quiz-progress">第 ${quizIndex + 1} / ${quizQuestions.length} 题 · 得分 ${quizScore}</div>
     <div class="quiz-question-row">
       <div class="quiz-question">${escapeHtml(q.prompt)}</div>
-      ${q.direction === 'en2cn' ? `<button class="speak-btn" onclick="speakText(this.previousElementSibling.textContent, this)" title="朗读发音">🔊</button>` : ''}
+      ${q.direction === 'en2cn' ? `<button class="speak-btn" onclick="speakText(this.previousElementSibling.textContent, this)" title="朗读发音"><img src="sound.png" alt="朗读" class="speak-icon"></button>` : ''}
     </div>
     <div class="quiz-options">
       ${q.options.map((opt, i) => `<button class="quiz-option" id="quiz-opt-${i}" onclick="answerQuiz(${i})">${escapeHtml(opt)}</button>`).join('')}
@@ -1317,7 +1835,8 @@ function restartQuiz(){ quizQuestions = []; quizIndex = 0; quizScore = 0; quizAn
 /* ============ EXPORT / IMPORT ============ */
 
 function exportData(){
-  const blob = new Blob([JSON.stringify(entries, null, 2)], {type:'application/json'});
+  const payload = { entries: entries, roots: roots, exportedAt: Date.now() };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   const d = new Date();
@@ -1332,18 +1851,36 @@ function importData(event){
   const reader = new FileReader();
   reader.onload = function(e){
     try{
-      const imported = JSON.parse(e.target.result);
-      if(!Array.isArray(imported)) throw new Error('Invalid format');
-      if(confirm(`导入 ${imported.length} 条记录。\n点"确定"合并到现有记录，点"取消"替换全部现有记录。`)){
+      const parsed = JSON.parse(e.target.result);
+
+      // 兼容两种格式：旧版纯数组备份（只有 entries），新版 {entries, roots} 备份
+      const importedEntries = Array.isArray(parsed) ? parsed : (Array.isArray(parsed.entries) ? parsed.entries : null);
+      const importedRoots = Array.isArray(parsed) ? [] : (Array.isArray(parsed.roots) ? parsed.roots : []);
+
+      if(!importedEntries) throw new Error('Invalid format');
+
+      const totalCount = importedEntries.length + importedRoots.length;
+      if(confirm(`导入 ${importedEntries.length} 条单词/句子记录，${importedRoots.length} 条词根笔记。\n点"确定"合并到现有记录，点"取消"替换全部现有记录。`)){
         const existingIds = new Set(entries.map(en => en.id));
-        imported.forEach(im => { if(!existingIds.has(im.id)) entries.unshift(im); });
-      }else{ entries = imported; }
+        importedEntries.forEach(im => { if(!existingIds.has(im.id)) entries.unshift(im); });
+
+        const existingRootIds = new Set(roots.map(r => r.id));
+        importedRoots.forEach(im => { if(!existingRootIds.has(im.id)) roots.unshift(im); });
+      }else{
+        entries = importedEntries;
+        roots = importedRoots;
+      }
       entries.forEach(e => {
         if(typeof e.reviewLevel !== 'number') e.reviewLevel = 0;
         if(typeof e.nextReview !== 'number') e.nextReview = Date.now();
         if(typeof e.lastReviewed !== 'number') e.lastReviewed = 0;
       });
-      saveEntries(); render(); renderReview();
+      roots.forEach(r => {
+        if(!Array.isArray(r.words)) r.words = [];
+        if(typeof r.createdAt !== 'number') r.createdAt = Date.now();
+      });
+      normalizeRoots(roots);
+      saveEntries(); saveRoots(); render(); renderReview(); renderRoots();
     }catch(err){ alert('导入失败：文件格式不正确'); }
     event.target.value = '';
   };
@@ -1360,7 +1897,12 @@ document.getElementById('sentence-term').addEventListener('keydown', function(e)
   if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { addEntry('sentence'); }
 });
 
+document.getElementById('root-term').addEventListener('keydown', function(e){
+  if(e.key === 'Enter') { document.getElementById('root-meaning').focus(); }
+});
+
 loadEntries();
+loadRoots();
 </script>
 
 </body>
