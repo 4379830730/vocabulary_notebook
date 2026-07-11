@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Vocabulary Notebook</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
 
 :root{
   --paper:#F6F3ED;
@@ -23,7 +23,7 @@
 
 body{
   margin:0;
-  font-family:'IBM Plex Sans',sans-serif;
+  font-family:'Open Sans',sans-serif;
   color:var(--ink);
   background-color:var(--paper);
   background-image:radial-gradient(circle, var(--grid) 1px, transparent 1px);
@@ -41,7 +41,7 @@ body{
   justify-content:space-between;
   flex-wrap:wrap;
   gap:10px;
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'Open Sans',sans-serif;
   font-size:12px;
   letter-spacing:0.06em;
   position:sticky;
@@ -55,7 +55,7 @@ body{
   border-radius:3px;
   font-weight:600;
 }
-.filebar .count{font-family:'IBM Plex Mono',monospace;}
+.filebar .count{font-family:'Open Sans',sans-serif;}
 .filebar .due-badge{
   background:var(--warn);
   color:var(--ink);
@@ -65,14 +65,14 @@ body{
 }
 
 .wrap{
-  max-width:880px;
+  max-width:1240px;
   margin:0 auto;
   padding:32px 20px 0;
 }
 
 .hero{margin-bottom:22px;}
 .hero .eyebrow{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'Open Sans',sans-serif;
   font-size:12px;
   letter-spacing:0.18em;
   text-transform:uppercase;
@@ -80,7 +80,7 @@ body{
   margin-bottom:8px;
 }
 .hero h1{
-  font-family:'Space Grotesk',sans-serif;
+  font-family:'Open Sans',sans-serif;
   font-size:30px;
   margin:0 0 8px;
 }
@@ -100,7 +100,7 @@ body{
   flex-wrap: wrap;
 }
 .tab-btn{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'Open Sans',sans-serif;
   font-size:12px;
   letter-spacing:0.08em;
   text-transform:uppercase;
@@ -137,6 +137,7 @@ body{
   border:1px solid var(--ink);
   padding:20px;
   margin-bottom:20px;
+  max-width:880px;
 }
 .corner{position:absolute;width:13px;height:13px;border:2px solid var(--accent);}
 .corner.tl{top:-2px;left:-2px;border-right:none;border-bottom:none;}
@@ -145,7 +146,7 @@ body{
 .corner.br{bottom:-2px;right:-2px;border-left:none;border-top:none;}
 
 .frame-label{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'Open Sans',sans-serif;
   font-size:11px;
   letter-spacing:0.14em;
   text-transform:uppercase;
@@ -169,7 +170,7 @@ body{
 
 label.field-label{
   display:block;
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'Open Sans',sans-serif;
   font-size:10px;
   letter-spacing:0.1em;
   text-transform:uppercase;
@@ -182,7 +183,7 @@ input[type="text"], textarea, select{
   border:1px solid var(--grid);
   border-radius:4px;
   padding:9px 10px;
-  font-family:'IBM Plex Sans',sans-serif;
+  font-family:'Open Sans',sans-serif;
   font-size:14px;
   color:var(--ink);
   background:#fff;
@@ -199,7 +200,7 @@ textarea{resize:vertical;min-height:54px;}
 }
 
 .btn{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'Open Sans',sans-serif;
   font-size:12px;
   letter-spacing:0.06em;
   border:1px solid var(--ink);
@@ -250,11 +251,31 @@ textarea{resize:vertical;min-height:54px;}
 .empty-msg{
   text-align:center;
   color:var(--muted);
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'Open Sans',sans-serif;
   font-size:13px;
   padding:40px 0;
   border:1px dashed var(--grid);
   border-radius:6px;
+}
+
+/* ---- Entry grid (card layout) ---- */
+#words-entries, #sentences-entries{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:12px;
+  align-items:stretch;
+}
+#words-entries .empty-msg, #sentences-entries .empty-msg{
+  grid-column:1 / -1;
+}
+@media (max-width:1080px){
+  #words-entries, #sentences-entries{grid-template-columns:repeat(3, 1fr);}
+}
+@media (max-width:800px){
+  #words-entries, #sentences-entries{grid-template-columns:repeat(2, 1fr);}
+}
+@media (max-width:520px){
+  #words-entries, #sentences-entries{grid-template-columns:1fr;}
 }
 
 /* ---- Entry cards ---- */
@@ -265,10 +286,13 @@ textarea{resize:vertical;min-height:54px;}
   border-left:4px solid var(--accent);
   border-radius:4px;
   padding:14px 16px;
-  margin-bottom:10px;
+  margin-bottom:0;
+  display:flex;
+  flex-direction:column;
 }
 .entry.type-phrase{border-left-color:var(--success);}
 .entry.type-sentence{border-left-color:#6C8EBF;}
+.entry.editing{grid-column:1 / -1;}
 
 .entry-head{
   display:flex;
@@ -278,7 +302,7 @@ textarea{resize:vertical;min-height:54px;}
   margin-bottom:6px;
 }
 .entry-term{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'Open Sans',sans-serif;
   font-weight:600;
   font-size:15px;
   white-space:pre-wrap;
@@ -294,7 +318,7 @@ textarea{resize:vertical;min-height:54px;}
   flex: 1;
 }
 .type-badge{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'Open Sans',sans-serif;
   font-size:10px;
   letter-spacing:0.08em;
   text-transform:uppercase;
@@ -305,7 +329,7 @@ textarea{resize:vertical;min-height:54px;}
   margin-top: 2px;
 }
 .tag-badge{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'Open Sans',sans-serif;
   font-size:10px;
   letter-spacing:0.05em;
   background:var(--paper);
@@ -316,7 +340,7 @@ textarea{resize:vertical;min-height:54px;}
   margin-top: 2px;
 }
 .level-badge{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'Open Sans',sans-serif;
   font-size:10px;
   letter-spacing:0.05em;
   border-radius:3px;
@@ -341,16 +365,58 @@ textarea{resize:vertical;min-height:54px;}
   white-space:pre-wrap;
 }
 .entry-date{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'Open Sans',sans-serif;
   font-size:10px;
   color:var(--muted);
   margin-top:6px;
+}
+.entry-badges{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-bottom:6px;
+}
+.entry-footer{
+  margin-top:auto;
+  padding-top:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
 }
 .entry-actions{
   display:flex;
   gap:6px;
   flex-shrink:0;
 }
+
+/* ---- Speak button ---- */
+.speak-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:26px;
+  height:26px;
+  flex-shrink:0;
+  border:1px solid var(--grid);
+  border-radius:50%;
+  background:#fff;
+  color:var(--ink-soft);
+  cursor:pointer;
+  font-size:13px;
+  line-height:1;
+  padding:0;
+  margin-left:2px;
+  transition:background 0.15s, color 0.15s, border-color 0.15s;
+}
+.speak-btn:hover{background:var(--ink);border-color:var(--ink);color:#fff;}
+.speak-btn:active{transform:scale(0.94);}
+.speak-btn.speaking{background:var(--accent);border-color:var(--accent);color:#fff;}
+.entry-term-row{display:flex;align-items:flex-start;gap:6px;}
+.fc-term-row{display:flex;align-items:center;justify-content:center;gap:8px;}
+.quiz-question-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;}
 
 /* ---- Review session ---- */
 .session-setup{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:6px;}
@@ -370,7 +436,7 @@ textarea{resize:vertical;min-height:54px;}
   gap:10px;
 }
 .flashcard .fc-term{
-  font-family:'Space Grotesk',sans-serif;
+  font-family:'Open Sans',sans-serif;
   font-size:24px;
   font-weight:600;
   white-space:pre-wrap;
@@ -396,7 +462,7 @@ textarea{resize:vertical;min-height:54px;}
 .progress-row{
   display:flex;
   justify-content:space-between;
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'Open Sans',sans-serif;
   font-size:11px;
   color:var(--ink-soft);
   margin-bottom:6px;
@@ -405,7 +471,7 @@ textarea{resize:vertical;min-height:54px;}
 
 /* ---- Quiz ---- */
 .quiz-question{
-  font-family:'Space Grotesk',sans-serif;
+  font-family:'Open Sans',sans-serif;
   font-size:20px;
   font-weight:600;
   text-align:center;
@@ -436,14 +502,14 @@ textarea{resize:vertical;min-height:54px;}
 .quiz-option.incorrect{border-color:var(--accent);background:#FFF3F0;}
 .quiz-option:disabled{cursor:default;}
 .quiz-progress{
-  font-family:'IBM Plex Mono',monospace;
+  font-family:'Open Sans',sans-serif;
   font-size:11px;
   color:var(--ink-soft);
   text-align:center;
   margin-bottom:6px;
 }
 .quiz-score{
-  font-family:'Space Grotesk',sans-serif;
+  font-family:'Open Sans',sans-serif;
   font-size:26px;
   text-align:center;
   margin:20px 0 10px;
@@ -759,6 +825,41 @@ function saveEdit(id){
   render();
 }
 
+/* ============ TEXT TO SPEECH ============ */
+
+function speak(text, lang){
+  if(!('speechSynthesis' in window)){
+    alert('你的浏览器不支持语音朗读功能');
+    return;
+  }
+  if(!text) return;
+  speechSynthesis.cancel(); // 停止之前正在读的内容
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = lang || 'en-US';
+  utter.rate = 0.92;
+  speechSynthesis.speak(utter);
+}
+
+// 根据 entry id 朗读该条目的英文内容
+function speakEntry(id, btn){
+  const e = entries.find(x => x.id === id);
+  if(!e) return;
+  flashSpeakBtn(btn);
+  speak(e.term, 'en-US');
+}
+
+// 直接朗读传入文本（用于闪卡/测验等临时场景）
+function speakText(text, btn){
+  flashSpeakBtn(btn);
+  speak(text, 'en-US');
+}
+
+function flashSpeakBtn(btn){
+  if(!btn) return;
+  btn.classList.add('speaking');
+  setTimeout(() => btn.classList.remove('speaking'), 400);
+}
+
 /* ============ HELPERS ============ */
 
 function typeLabel(type){
@@ -876,23 +977,24 @@ function generateEntryHTML(e) {
   const dueToday = (e.translation || e.note) && e.nextReview <= Date.now();
   return `
     <div class="entry type-${e.type}">
-      <div class="entry-head">
-        <div class="entry-meta">
-          <div class="entry-term">${escapeHtml(e.term)}</div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:4px;">
-            <span class="type-badge">${typeLabel(e.type)}</span>
-            ${e.tag ? `<span class="tag-badge">${escapeHtml(e.tag)}</span>` : ''}
-            <span class="level-badge" title="复习等级 / 下次复习日期">Lv.${e.reviewLevel} · 下次 ${formatDate(e.nextReview)}${dueToday ? ' · 待复习' : ''}</span>
-          </div>
-        </div>
+      <div class="entry-term-row">
+        <div class="entry-term">${escapeHtml(e.term)}</div>
+        <button class="speak-btn" onclick="speakEntry('${e.id}', this)" title="朗读发音">🔊</button>
+      </div>
+      <div class="entry-badges">
+        <span class="type-badge">${typeLabel(e.type)}</span>
+        ${e.tag ? `<span class="tag-badge">${escapeHtml(e.tag)}</span>` : ''}
+        <span class="level-badge" title="复习等级 / 下次复习日期">Lv.${e.reviewLevel} · 下次 ${formatDate(e.nextReview)}${dueToday ? ' · 待复习' : ''}</span>
+      </div>
+      ${e.translation ? `<div class="entry-translation">${escapeHtml(e.translation)}</div>` : ''}
+      ${e.note ? `<div class="entry-note">${escapeHtml(e.note)}</div>` : ''}
+      <div class="entry-footer">
+        <div class="entry-date">添加于 ${formatDate(e.createdAt)}${e.lastReviewed ? ` · 上次复习 ${formatDate(e.lastReviewed)}` : ''}</div>
         <div class="entry-actions">
           <button class="btn btn-ghost btn-sm" onclick="startEdit('${e.id}')">编辑</button>
           <button class="btn btn-danger btn-sm" onclick="deleteEntry('${e.id}')">删除</button>
         </div>
       </div>
-      ${e.translation ? `<div class="entry-translation">${escapeHtml(e.translation)}</div>` : ''}
-      ${e.note ? `<div class="entry-note">${escapeHtml(e.note)}</div>` : ''}
-      <div class="entry-date">添加于 ${formatDate(e.createdAt)}${e.lastReviewed ? ` · 上次复习 ${formatDate(e.lastReviewed)}` : ''}</div>
     </div>
   `;
 }
@@ -985,7 +1087,7 @@ function renderReview(){
     content.innerHTML = `
       <div style="display:flex; flex-direction:column; gap:16px;">
         <div style="border:1px solid var(--grid); border-left:4px solid var(--success); border-radius:4px; padding:16px; background:var(--card);">
-          <div style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; margin-bottom:8px;">📝 单词与短语</div>
+          <div style="font-family:'Open Sans',sans-serif; font-size:16px; font-weight:600; margin-bottom:8px;">📝 单词与短语</div>
           <div style="font-size:13px; color:var(--ink-soft); margin-bottom:14px;">今日待复习：<b>${dueWords}</b> 项（总库共 ${allWords} 项）</div>
           <div class="btn-row">
             <button class="btn" onclick="startReview('words', false)" ${dueWords===0?'disabled':''}>开始今日复习</button>
@@ -994,7 +1096,7 @@ function renderReview(){
         </div>
         
         <div style="border:1px solid var(--grid); border-left:4px solid #6C8EBF; border-radius:4px; padding:16px; background:var(--card);">
-          <div style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; margin-bottom:8px;">📖 长句</div>
+          <div style="font-family:'Open Sans',sans-serif; font-size:16px; font-weight:600; margin-bottom:8px;">📖 长句</div>
           <div style="font-size:13px; color:var(--ink-soft); margin-bottom:14px;">今日待复习：<b>${dueSens}</b> 项（总库共 ${allSens} 项）</div>
           <div class="btn-row">
             <button class="btn" onclick="startReview('sentences', false)" ${dueSens===0?'disabled':''}>开始今日复习</button>
@@ -1009,7 +1111,7 @@ function renderReview(){
   if(reviewIndex >= reviewQueue.length){
     content.innerHTML = `
       <div class="quiz-score">复习完成！</div>
-      <div class="center" style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">
+      <div class="center" style="font-family:'Open Sans',sans-serif;font-size:13px;color:var(--ink-soft);">
         记得 ${reviewStats.known} · 模糊 ${reviewStats.vague} · 忘记 ${reviewStats.forgot}
       </div>
       <div class="btn-row" style="justify-content:center;margin-top:18px;">
@@ -1030,7 +1132,10 @@ function renderReview(){
         <span class="type-badge">${typeLabel(e.type)}</span>
         ${e.tag ? `<span class="tag-badge">${escapeHtml(e.tag)}</span>` : ''}
       </div>
-      <div class="fc-term">${escapeHtml(e.term)}</div>
+      <div class="fc-term-row">
+        <div class="fc-term">${escapeHtml(e.term)}</div>
+        <button class="speak-btn" onclick="speakEntry('${e.id}', this)" title="朗读发音">🔊</button>
+      </div>
       ${reviewRevealed ? `
         <div class="fc-back">
           ${e.translation ? `<div class="fc-translation">${escapeHtml(e.translation)}</div>` : ''}
@@ -1113,7 +1218,7 @@ function renderQuizSetup(){
   content.innerHTML = `
     <div style="display:flex; flex-direction:column; gap:16px;">
       <div style="border:1px solid var(--grid); border-left:4px solid var(--success); border-radius:4px; padding:16px; background:var(--card); opacity:${eligibleWords.length < 2 ? '0.5' : '1'}">
-        <div style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; margin-bottom:8px;">📝 单词与短语测验</div>
+        <div style="font-family:'Open Sans',sans-serif; font-size:16px; font-weight:600; margin-bottom:8px;">📝 单词与短语测验</div>
         <div class="session-setup">
           <span style="font-size:13px; color:var(--ink-soft); margin-right:10px;">可用题目：${eligibleWords.length}</span>
           ${eligibleWords.length >= 2 ? `
@@ -1130,7 +1235,7 @@ function renderQuizSetup(){
       </div>
 
       <div style="border:1px solid var(--grid); border-left:4px solid #6C8EBF; border-radius:4px; padding:16px; background:var(--card); opacity:${eligibleSens.length < 2 ? '0.5' : '1'}">
-        <div style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; margin-bottom:8px;">📖 长句测验</div>
+        <div style="font-family:'Open Sans',sans-serif; font-size:16px; font-weight:600; margin-bottom:8px;">📖 长句测验</div>
         <div class="session-setup">
           <span style="font-size:13px; color:var(--ink-soft); margin-right:10px;">可用题目：${eligibleSens.length}</span>
           ${eligibleSens.length >= 2 ? `
@@ -1169,7 +1274,10 @@ function renderQuizQuestion(){
   const q = quizQuestions[quizIndex];
   content.innerHTML = `
     <div class="quiz-progress">第 ${quizIndex + 1} / ${quizQuestions.length} 题 · 得分 ${quizScore}</div>
-    <div class="quiz-question">${escapeHtml(q.prompt)}</div>
+    <div class="quiz-question-row">
+      <div class="quiz-question">${escapeHtml(q.prompt)}</div>
+      ${q.direction === 'en2cn' ? `<button class="speak-btn" onclick="speakText(this.previousElementSibling.textContent, this)" title="朗读发音">🔊</button>` : ''}
+    </div>
     <div class="quiz-options">
       ${q.options.map((opt, i) => `<button class="quiz-option" id="quiz-opt-${i}" onclick="answerQuiz(${i})">${escapeHtml(opt)}</button>`).join('')}
     </div>
@@ -1199,7 +1307,7 @@ function nextQuiz(){
 function renderQuizResult(){
   document.getElementById('quiz-content').innerHTML = `
     <div class="quiz-score">${quizScore} / ${quizQuestions.length}</div>
-    <div class="center" style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);">正确率 ${Math.round(quizScore/quizQuestions.length*100)}%</div>
+    <div class="center" style="font-family:'Open Sans',sans-serif;font-size:13px;color:var(--ink-soft);">正确率 ${Math.round(quizScore/quizQuestions.length*100)}%</div>
     <div class="btn-row" style="justify-content:center;margin-top:18px;"><button class="btn" onclick="restartQuiz()">再来一次</button></div>
   `;
 }
