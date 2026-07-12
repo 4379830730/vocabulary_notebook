@@ -25,9 +25,7 @@ body{
   margin:0;
   font-family:'Open Sans',sans-serif;
   color:var(--ink);
-  background-color:var(--paper);
-  background-image:radial-gradient(circle, var(--grid) 1px, transparent 1px);
-  background-size:22px 22px;
+  background-color:#FFFFFF; /* 修改为纯白背景 */
   line-height:1.55;
   padding:0 0 60px;
 }
@@ -68,27 +66,6 @@ body{
   max-width:1240px;
   margin:0 auto;
   padding:32px 20px 0;
-}
-
-.hero{margin-bottom:22px;}
-.hero .eyebrow{
-  font-family:'Open Sans',sans-serif;
-  font-size:12px;
-  letter-spacing:0.18em;
-  text-transform:uppercase;
-  color:var(--accent);
-  margin-bottom:8px;
-}
-.hero h1{
-  font-family:'Open Sans',sans-serif;
-  font-size:30px;
-  margin:0 0 8px;
-}
-.hero p{
-  max-width:620px;
-  color:var(--ink-soft);
-  font-size:14px;
-  margin:0;
 }
 
 /* ---- Tabs ---- */
@@ -552,27 +529,34 @@ textarea{resize:vertical;min-height:54px;}
   margin-top:3px;
   word-break:break-word;
 }
-.root-word-del{
+
+/* 新增的编辑与删除按钮样式 */
+.root-word-actions{
   position:absolute;
   top:-8px;
   right:-8px;
+  display:flex;
+  gap:4px;
+  opacity:0;
+  transition:opacity 0.15s;
+}
+.root-word-node:hover .root-word-actions{opacity:1;}
+.root-word-action-btn{
   width:18px;
   height:18px;
   border-radius:50%;
   border:1px solid var(--grid);
   background:#fff;
   color:var(--ink-soft);
-  font-size:12px;
+  font-size:11px;
   line-height:1;
   cursor:pointer;
   display:flex;
   align-items:center;
   justify-content:center;
-  opacity:0;
-  transition:opacity 0.15s;
 }
-.root-word-node:hover .root-word-del{opacity:1;}
-.root-word-del:hover{background:var(--accent);border-color:var(--accent);color:#fff;}
+.root-word-action-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff;}
+
 .root-word-add-child{
   margin-top:6px;
   width:100%;
@@ -720,14 +704,13 @@ textarea{resize:vertical;min-height:54px;}
 
 @media (max-width:640px){
   .form-grid, .form-grid-2 {grid-template-columns:1fr;}
-  .hero h1{font-size:24px;}
 }
 </style>
 </head>
 <body>
 
 <div class="filebar">
-  <div>Vocabulary_Notebook <span class="tag">UX / Job Search English</span></div>
+  <div>Vocabulary_Notebook <span class="tag">TATA World</span></div>
   <div style="display:flex;gap:8px;align-items:center;">
     <span class="due-badge" id="due-badge" style="display:none;"></span>
     <span class="count" id="entry-count">0 entries</span>
@@ -735,12 +718,6 @@ textarea{resize:vertical;min-height:54px;}
 </div>
 
 <div class="wrap">
-
-  <div class="hero">
-    <div class="eyebrow">My Notes</div>
-    <h1>词汇 · 句子笔记本</h1>
-    <p>分开记录你的单词和精彩长句，用「每日复习」和「测验」检验记忆效果。所有内容保存在这个浏览器里，下次打开自动加载。</p>
-  </div>
 
   <div class="tabs">
     <button class="tab-btn active" data-tab="words" onclick="switchTab('words')">单词与短语 Words</button>
@@ -927,6 +904,7 @@ textarea{resize:vertical;min-height:54px;}
 let entries = [];
 let editingId = null;
 let roots = [];
+let editingRootNodeId = null; // 用于记录当前正在内联编辑的派生词节点ID
 
 const STORAGE_KEY = 'vocab-notebook-entries';
 const ROOTS_KEY = 'vocab-notebook-roots';
@@ -1024,9 +1002,7 @@ function updateDueBadge(){
   }
 }
 
-/* ============ ROOT NOTES (add / edit / delete / render) ============ */
-/* 每个词根下的 words 是一棵树：每个词节点 {id, word, meaning, children:[]}
-   children 里的元素结构完全相同，因此派生词可以再有自己的派生词，层级不限。 */
+/* ============ ROOT NOTES ============ */
 
 function addRootGroup(){
   const term = document.getElementById('root-term').value.trim();
@@ -1059,7 +1035,6 @@ function addRootGroup(){
   renderRoots();
 }
 
-// 在某个节点数组（可能是根的 words，也可能是某个词的 children）中递归查找指定 id 的节点
 function findWordNode(nodes, nodeId){
   for(const n of nodes){
     if(n.id === nodeId) return n;
@@ -1071,7 +1046,6 @@ function findWordNode(nodes, nodeId){
   return null;
 }
 
-// 在节点树中递归查找并删除指定 id 的节点（同时会删掉它下面所有的派生词）
 function removeWordNode(nodes, nodeId){
   const idx = nodes.findIndex(n => n.id === nodeId);
   if(idx !== -1){ nodes.splice(idx, 1); return true; }
@@ -1081,7 +1055,6 @@ function removeWordNode(nodes, nodeId){
   return false;
 }
 
-// 添加根一级的派生词（卡片底部常驻的那个输入框）
 function addWordToRoot(rootId){
   const wordInput = document.getElementById('add-word-' + rootId);
   const meaningInput = document.getElementById('add-word-meaning-' + rootId);
@@ -1101,7 +1074,6 @@ function addWordToRoot(rootId){
   });
 }
 
-// 展开/收起某个派生词节点上的"添加派生词的派生词"小表单
 function toggleChildForm(nodeId){
   const form = document.getElementById('child-form-' + nodeId);
   if(!form) return;
@@ -1112,7 +1084,6 @@ function toggleChildForm(nodeId){
   }
 }
 
-// 给任意一个派生词节点添加它自己的派生词（可以无限层级）
 function addChildWord(rootId, parentNodeId){
   const r = roots.find(x => x.id === rootId);
   if(!r) return;
@@ -1131,8 +1102,40 @@ function addChildWord(rootId, parentNodeId){
   renderRoots();
 }
 
-// 删除任意层级的一个派生词节点（含它自己的所有子派生词）
+// 开启派生词的内联编辑
+function startEditWordNode(nodeId){
+  editingRootNodeId = nodeId;
+  renderRoots();
+}
+
+// 取消派生词的内联编辑
+function cancelEditWordNode(){
+  editingRootNodeId = null;
+  renderRoots();
+}
+
+// 保存派生词的内联编辑修改
+function saveEditWordNode(rootId, nodeId){
+  const r = roots.find(x => x.id === rootId);
+  if(!r) return;
+  const node = findWordNode(r.words, nodeId);
+  if(!node) return;
+  
+  const newWord = document.getElementById('edit-node-word-' + nodeId).value.trim();
+  const newMeaning = document.getElementById('edit-node-meaning-' + nodeId).value.trim();
+  
+  if(!newWord){ document.getElementById('edit-node-word-' + nodeId).focus(); return; }
+  
+  node.word = newWord;
+  node.meaning = newMeaning;
+  
+  editingRootNodeId = null;
+  saveRoots();
+  renderRoots();
+}
+
 function deleteWordNode(rootId, nodeId){
+  if(!confirm('确定要删除这个词吗？这也会删除它的所有下级派生词。')) return;
   const r = roots.find(x => x.id === rootId);
   if(!r) return;
   removeWordNode(r.words, nodeId);
@@ -1160,7 +1163,6 @@ function editRootMeta(rootId){
   renderRoots();
 }
 
-// 递归搜索：词根本身，或者树中任意一层的任意一个派生词命中关键词，就算匹配
 function nodeMatchesSearch(nodes, search){
   return nodes.some(n =>
     n.word.toLowerCase().includes(search) ||
@@ -1198,7 +1200,6 @@ function renderRoots(){
   container.innerHTML = list.map(renderRootCard).join('');
 }
 
-// 递归渲染一层派生词的分支（连接线 + 节点框 + 它自己的子分支）
 function renderWordTree(nodes, rootId, depth){
   if(!nodes || nodes.length === 0) return '';
   return `
@@ -1213,10 +1214,32 @@ function renderWordTree(nodes, rootId, depth){
 
 function renderWordBranch(node, rootId, depth){
   const children = Array.isArray(node.children) ? node.children : [];
+  
+  // 判断当前节点是否正处于编辑状态
+  if (node.id === editingRootNodeId) {
+    return `
+      <div class="root-word-branch" data-depth="${depth}">
+        <div class="root-word-node" style="padding: 12px 10px;">
+          <input type="text" id="edit-node-word-${node.id}" value="${escapeHtml(node.word)}" style="width: 100%; margin-bottom: 6px; font-size: 13px; padding: 5px 8px; text-align: center;">
+          <input type="text" id="edit-node-meaning-${node.id}" value="${escapeHtml(node.meaning || '')}" placeholder="意思" style="width: 100%; margin-bottom: 10px; font-size: 12px; padding: 5px 8px; text-align: center;">
+          <div style="display: flex; gap: 6px; justify-content: center;">
+            <button class="btn btn-success" style="padding: 4px 10px; font-size: 11px;" onclick="saveEditWordNode('${rootId}', '${node.id}')">保存</button>
+            <button class="btn btn-ghost" style="padding: 4px 10px; font-size: 11px;" onclick="cancelEditWordNode()">取消</button>
+          </div>
+        </div>
+        ${renderWordTree(children, rootId, depth + 1)}
+      </div>
+    `;
+  }
+
+  // 正常展示状态
   return `
     <div class="root-word-branch" data-depth="${depth}">
       <div class="root-word-node">
-        <button class="root-word-del" onclick="deleteWordNode('${rootId}','${node.id}')" title="删除（含它自己的所有派生词）">×</button>
+        <div class="root-word-actions">
+          <button class="root-word-action-btn" onclick="startEditWordNode('${node.id}')" title="编辑单词">✎</button>
+          <button class="root-word-action-btn" onclick="deleteWordNode('${rootId}','${node.id}')" title="删除（含所有子节点）">×</button>
+        </div>
         <div class="root-word-row">
           <span class="root-word-text">${escapeHtml(node.word)}</span>
           <button class="speak-btn" style="width:20px;height:20px;font-size:11px;" onclick="speakText(this.closest('.root-word-node').querySelector('.root-word-text').textContent, this)" title="朗读发音"><img src="sound.png" alt="朗读" class="speak-icon"></button>
@@ -1258,7 +1281,7 @@ function renderRootCard(r){
   `;
 }
 
-/* ============ ADD / EDIT / DELETE ============ */
+/* ============ ADD / EDIT / DELETE (Entries) ============ */
 
 function addEntry(mode){
   let term, type, tag, translation, note;
