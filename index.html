@@ -660,7 +660,7 @@ textarea{resize:vertical;min-height:54px;}
   min-width:110px;
 }
 
-/* ---- Apple Notes Layout (Rich Text Upgrade) ---- */
+/* ---- Apple Notes Layout ---- */
 .notes-container {
   display: flex;
   height: 650px;
@@ -748,27 +748,11 @@ textarea{resize:vertical;min-height:54px;}
   background: #fff;
 }
 .notes-editor-toolbar {
-  padding: 12px 24px;
-  background: #fafafa;
-  border-bottom: 1px solid var(--grid);
+  padding: 14px 24px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: flex-end;
 }
-.rt-tools {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-.rt-select {
-  padding: 4px 8px;
-  font-size: 13px;
-  border: 1px solid var(--grid);
-  border-radius: 4px;
-  outline: none;
-  background: #fff;
-}
-.notes-editor-content-wrap {
+.notes-editor-content {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -780,36 +764,22 @@ textarea{resize:vertical;min-height:54px;}
   box-shadow: none !important;
   font-size: 24px !important;
   font-weight: 700 !important;
-  padding: 16px 0 10px 0 !important;
+  padding: 10px 0 !important;
   margin-bottom: 10px;
   background: transparent !important;
   color: var(--ink) !important;
 }
-
-/* 富文本编辑区样式 */
-.note-content-editor {
+.note-content-textarea {
+  border: none !important;
+  box-shadow: none !important;
   flex: 1;
-  outline: none;
-  font-size: 15px;
+  resize: none;
+  font-size: 15px !important;
   line-height: 1.6;
-  color: var(--ink);
-  min-height: 200px;
+  background: transparent !important;
+  padding: 0 !important;
+  color: var(--ink) !important;
 }
-.note-content-editor[placeholder]:empty:before {
-  content: attr(placeholder);
-  color: var(--muted);
-  pointer-events: none;
-  display: block;
-}
-/* 编辑器里的图片样式 */
-.note-content-editor img {
-  max-width: 100%;
-  border-radius: 8px;
-  margin: 10px 0;
-  display: block;
-  box-shadow: var(--shadow-sm);
-}
-
 .note-empty-state {
   flex: 1;
   display: flex;
@@ -1131,12 +1101,10 @@ textarea{resize:vertical;min-height:54px;}
           <button class="btn btn-ghost btn-sm btn-icon" onclick="createNewNote()" title="新建笔记">＋</button>
         </div>
         <div class="notes-list" id="notes-list">
-          <!-- Note list items render here -->
-        </div>
+          </div>
       </div>
       <div class="notes-editor" id="notes-editor">
-        <!-- Editor renders here -->
-      </div>
+        </div>
     </div>
     <div class="toolbar">
       <button class="btn btn-ghost btn-sm" onclick="exportData()">导出全部备份</button>
@@ -1302,55 +1270,6 @@ function updateDueBadge(){
   }
 }
 
-/* ============ RICH TEXT EDITOR TOOLS ============ */
-
-// 格式化文本函数
-function formatDoc(cmd, value = null) {
-  document.execCommand(cmd, false, value);
-  const editor = document.getElementById('note-content');
-  if (editor) editor.focus();
-  updateActiveNote();
-}
-
-// 插入图片带自动压缩（防崩溃机制）
-function insertImage(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const img = new Image();
-    img.onload = function() {
-      // 创建 Canvas 压缩图像，防止 localStorage 超过 5MB 爆满
-      const canvas = document.createElement('canvas');
-      const MAX_WIDTH = 800;
-      let width = img.width;
-      let height = img.height;
-
-      // 按比例缩小
-      if (width > MAX_WIDTH) {
-        height *= MAX_WIDTH / width;
-        width = MAX_WIDTH;
-      }
-      
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, width, height);
-
-      // 导出为体积较小的 JPEG 格式，画质 80%
-      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
-      
-      // 插入到富文本框中
-      document.execCommand('insertImage', false, compressedDataUrl);
-      updateActiveNote();
-    }
-    img.src = e.target.result;
-  }
-  reader.readAsDataURL(file);
-  event.target.value = ''; // 清空 input 以便下次能选同一张图
-}
-
 /* ============ NOTES APP ============ */
 
 function createNewNote() {
@@ -1396,24 +1315,17 @@ function updateActiveNote() {
   const note = notes.find(n => n.id === activeNoteId);
   if(note) {
     note.title = document.getElementById('note-title').value;
-    // 抓取富文本框的 HTML 内容，而不是纯文本
-    note.content = document.getElementById('note-content').innerHTML;
+    note.content = document.getElementById('note-content').value;
     note.updatedAt = Date.now();
     saveNotes();
     renderNotesList(); // 只更新左侧列表，不重绘右侧以免丢失光标
   }
 }
 
-function getNoteSnippet(htmlContent) {
-  if(!htmlContent) return '无额外内容';
-  
-  // 利用临时 DOM 元素剥离掉 HTML 标签和图片，只提取纯文本做预览
-  const temp = document.createElement('div');
-  temp.innerHTML = htmlContent;
-  const text = temp.textContent || temp.innerText || '';
-  
-  const cleanText = text.replace(/\n/g, ' ').trim();
-  return cleanText.length > 20 ? cleanText.substring(0, 20) + '...' : (cleanText || '无额外内容');
+function getNoteSnippet(content) {
+  if(!content) return '无额外文本';
+  const text = content.replace(/\n/g, ' ').trim();
+  return text.length > 20 ? text.substring(0, 20) + '...' : text;
 }
 
 function formatNoteDate(ts) {
@@ -1460,27 +1372,13 @@ function renderNoteEditor() {
   const note = notes.find(n => n.id === activeNoteId);
   if(!note) return;
 
-  // 使用 contenteditable 代替原有的 textarea 以支持富文本和图片
   editor.innerHTML = `
     <div class="notes-editor-toolbar">
-      <div class="rt-tools">
-        <button class="btn btn-ghost btn-sm btn-icon" onmousedown="event.preventDefault(); formatDoc('bold')" title="加粗" style="font-weight:900;">B</button>
-        <select class="rt-select" onchange="formatDoc('fontSize', this.value); this.selectedIndex=0;">
-          <option value="">A 字号</option>
-          <option value="3">正常大小</option>
-          <option value="4">中等标题</option>
-          <option value="5">大标题</option>
-        </select>
-        <button class="btn btn-ghost btn-sm btn-icon" onclick="document.getElementById('rt-img-upload').click()" title="插入图片">🖼️</button>
-        <input type="file" id="rt-img-upload" accept="image/*" style="display:none" onchange="insertImage(event)">
-      </div>
-      <button class="btn btn-danger btn-sm" onclick="deleteNote('${note.id}')" title="删除笔记">删除</button>
+      <button class="btn btn-ghost btn-sm" onclick="deleteNote('${note.id}')" title="删除笔记">🗑️</button>
     </div>
-    <div class="notes-editor-content-wrap">
+    <div class="notes-editor-content">
       <input type="text" id="note-title" class="note-title-input" value="${escapeHtml(note.title)}" placeholder="无标题" oninput="updateActiveNote()">
-      
-      <!-- 富文本编辑区 -->
-      <div id="note-content" class="note-content-editor" contenteditable="true" placeholder="在这里输入笔记、粘贴内容，或者通过上方按钮插入图片..." oninput="updateActiveNote()">${note.content}</div>
+      <textarea id="note-content" class="note-content-textarea" placeholder="在这里输入笔记内容..." oninput="updateActiveNote()">${escapeHtml(note.content)}</textarea>
     </div>
   `;
 }
@@ -1847,7 +1745,7 @@ function saveEdit(id){
   render();
 }
 
-/* ============ TEXT TO SPEECH ============ */
+/* ============ TEXT TO SPEECH (优化版) ============ */
 
 if (speechSynthesis.onvoiceschanged !== undefined) {
   speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
