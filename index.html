@@ -2126,15 +2126,41 @@ function importData(event){
         notes = importedNotes;
       }
 
-      loadEntries();
-      saveEntries(); saveRoots(); saveNotes();
-      render(); renderStudyView(); renderRoots(); renderNotesList(); renderNoteEditor();
-    }catch(err){ alert('导入失败：文件格式不正确'); }
+      // 1. 补全导入数据的默认字段
+      entries.forEach(item => {
+        if(typeof item.reviewLevel !== 'number') item.reviewLevel = 0;
+        if(typeof item.lastReviewed !== 'number') item.lastReviewed = 0;
+        if(typeof item.nextReview !== 'number') item.nextReview = 0;
+        if(typeof item.inTodayPlan !== 'boolean') item.inTodayPlan = false;
+        if(typeof item.spellCount !== 'number') item.spellCount = 0;
+        if(typeof item.spellCorrect !== 'number') item.spellCorrect = 0;
+      });
+      normalizeRoots(roots);
+      if(notes.length > 0 && !notes.find(n => n.id === activeNoteId)) {
+        activeNoteId = notes[0].id;
+      }
+
+      // 2. 先保存到 localStorage（切勿在此之前调用 loadEntries）
+      saveEntries(); 
+      saveRoots(); 
+      saveNotes();
+
+      // 3. 重新渲染所有界面
+      render(); 
+      renderStudyView(); 
+      renderRoots(); 
+      renderNotesList(); 
+      renderNoteEditor();
+
+      alert(`成功导入 ${importedEntries.length} 条记录！`);
+    }catch(err){ 
+      console.error(err);
+      alert('导入失败：文件格式不正确'); 
+    }
     event.target.value = '';
   };
   reader.readAsText(file);
 }
-
 /* ============ INIT ============ */
 document.getElementById('word-term').addEventListener('keydown', function(e){
   if(e.key === 'Enter') addEntry('word', false);
